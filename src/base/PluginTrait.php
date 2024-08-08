@@ -2,6 +2,8 @@
 
 namespace appmanschap\youtubeplaylistimporter\base;
 
+use appmanschap\youtubeplaylistimporter\elements\Playlist;
+use appmanschap\youtubeplaylistimporter\elements\PlaylistItem;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
@@ -76,7 +78,8 @@ trait PluginTrait
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             static function(RegisterComponentTypesEvent $event) {
-//                $event->types[] = Custom::class;
+                $event->types[] = Playlist::class;
+                $event->types[] = PlaylistItem::class;
             }
         );
     }

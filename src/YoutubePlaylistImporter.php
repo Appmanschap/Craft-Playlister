@@ -2,16 +2,21 @@
 
 namespace appmanschap\youtubeplaylistimporter;
 
-use appmanschap\youtubeplaylistimporter\base\PluginTrait;
-use appmanschap\youtubeplaylistimporter\base\Routes;
-use appmanschap\youtubeplaylistimporter\models\Settings;
 use Craft;
-use craft\base\Model;
-use craft\base\Plugin;
-use craft\helpers\UrlHelper;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use appmanschap\youtubeplaylistimporter\base\PluginTrait;
+use appmanschap\youtubeplaylistimporter\base\Routes;
+use appmanschap\youtubeplaylistimporter\elements\Playlist;
+use appmanschap\youtubeplaylistimporter\elements\PlaylistItem;
+use appmanschap\youtubeplaylistimporter\models\Settings;
+use craft\base\Model;
+use craft\base\Plugin;
+use craft\events\RegisterComponentTypesEvent;
+use craft\helpers\UrlHelper;
+use craft\services\Elements;
+use yii\base\Event;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
@@ -71,6 +76,7 @@ class YoutubePlaylistImporter extends Plugin
 
             if (Craft::$app->getRequest()->getIsCpRequest()) {
                 $this->_registerTemplateRoots();
+                $this->_registerElementTypes();
                 $this->_registerNavItems();
                 $this->_registerCpRoutes();
                 $this->_registerCpPermissions();

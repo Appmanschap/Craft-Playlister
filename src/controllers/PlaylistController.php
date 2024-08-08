@@ -2,6 +2,7 @@
 
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
+use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
@@ -30,7 +31,8 @@ class PlaylistController extends Controller
             'title' => Craft::t('youtubeplaylistimporter', 'Playlists'),
             'selectedSubnavItem' => 'playlists',
             'fullPageForm' => true,
-            'elementType' => '', // @TODO update the elementType
+            'canHaveDrafts' => true,
+            'elementType' => PlaylistElement::class, // @TODO update the elementType
             'crumbs' => $this->getCrumbs([
                 'label' => 'Playlists',
                 'url' => UrlHelper::cpUrl("youtube-playlist/playlists"),
