@@ -1,4 +1,5 @@
 <?php
+
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
@@ -10,10 +11,15 @@ class SettingsController extends Controller
 {
     protected array|bool|int $allowAnonymous = [];
 
-    public function actionPlugin()
+    /**
+     * @return mixed
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
+     */
+    public function actionPlugin(): mixed
     {
         $user = Craft::$app->getUser()->getIdentity();
-        if (!$user->can('youtube-playlist-importer:plugin-settings')) {
+        if (!$user?->can('youtube-playlist-importer:plugin-settings')) {
             throw new ForbiddenHttpException('You do not have permission to edit Youtube Playlist Importer plugin settings.');
         }
 
@@ -23,6 +29,6 @@ class SettingsController extends Controller
         }
 
         // Render the template
-        return YoutubePlaylistImporter::$plugin->getSettingsResponse(render: true);
+        return YoutubePlaylistImporter::$plugin?->getSettingsResponse(render: true);
     }
 }

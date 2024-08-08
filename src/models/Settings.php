@@ -2,7 +2,6 @@
 
 namespace appmanschap\youtubeplaylistimporter\models;
 
-use Craft;
 use craft\base\Model;
 
 /**
@@ -12,6 +11,9 @@ class Settings extends Model
 {
     public string|null $youtubeApiKey = null;
 
+    /**
+     * @return array<int, array<int|string, string>>
+     */
     public function rules(): array
     {
         return [

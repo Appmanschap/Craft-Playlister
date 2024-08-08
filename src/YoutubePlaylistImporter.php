@@ -4,8 +4,8 @@ namespace appmanschap\youtubeplaylistimporter;
 
 use appmanschap\youtubeplaylistimporter\base\PluginTrait;
 use appmanschap\youtubeplaylistimporter\base\Routes;
-use Craft;
 use appmanschap\youtubeplaylistimporter\models\Settings;
+use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\helpers\UrlHelper;
@@ -14,6 +14,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
+use yii\base\InvalidRouteException;
 
 /**
  * Youtube Playlist Importer plugin
@@ -45,7 +46,7 @@ class YoutubePlaylistImporter extends Plugin
     public bool $hasCpSettings = true;
 
     /**
-     * @return array[]
+     * @return array<string, array<string, class-string>>
      */
     public static function config(): array
     {
@@ -86,16 +87,23 @@ class YoutubePlaylistImporter extends Plugin
     }
 
     /**
-     * @inheritdoc
+     * @param  bool  $render
+     * @return mixed
+     * @throws InvalidRouteException
      */
-    public function getSettingsResponse($render = false): mixed
+    public function getSettingsResponse(bool $render = false): mixed
     {
         if ($render) {
             return parent::getSettingsResponse();
         }
 
+        $response = Craft::$app->getResponse();
+        if (!method_exists($response, 'redirect')) {
+            return $response;
+        }
+
         // Just redirect to the plugin settings page
-        return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('youtube-playlist/settings'));
+        return $response->redirect(UrlHelper::cpUrl('youtube-playlist/settings'));
     }
 
     /**

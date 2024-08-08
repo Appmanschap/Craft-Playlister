@@ -1,4 +1,5 @@
 <?php
+
 namespace appmanschap\youtubeplaylistimporter\base;
 
 use craft\events\RegisterCpNavItemsEvent;
@@ -17,7 +18,7 @@ trait Routes
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            static function (RegisterUrlRulesEvent $event) {
+            static function(RegisterUrlRulesEvent $event) {
                 $event->rules['youtube-playlist/settings'] = 'youtube-playlist-importer/settings/plugin';
             }
         );
@@ -28,7 +29,7 @@ trait Routes
      */
     public function _registerNavItems(): void
     {
-        Event::on(Cp::class, Cp::EVENT_REGISTER_CP_NAV_ITEMS, function (RegisterCpNavItemsEvent $event) {
+        Event::on(Cp::class, Cp::EVENT_REGISTER_CP_NAV_ITEMS, function(RegisterCpNavItemsEvent $event) {
             $event->navItems[] = [
                 'url' => 'youtube-playlist',
                 'label' => 'Youtube Playlists',
@@ -41,8 +42,8 @@ trait Routes
                     'settings' => [
                         'url' => 'youtube-playlist/settings',
                         'label' => 'Settings',
-                    ]
-                ]
+                    ],
+                ],
             ];
         });
     }

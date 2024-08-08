@@ -32,7 +32,7 @@ trait PluginTrait
      */
     public function _registerTemplateRoots(): void
     {
-        Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $event) {
+        Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function(RegisterTemplateRootsEvent $event) {
             $event->roots[$this->id] = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates/';
         });
     }
@@ -45,7 +45,7 @@ trait PluginTrait
         Event::on(
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            static function (RegisterComponentTypesEvent $event) {
+            static function(RegisterComponentTypesEvent $event) {
 //                $event->types[] = Custom::class;
             }
         );
@@ -56,7 +56,7 @@ trait PluginTrait
      */
     public function _registerFieldTypes(): void
     {
-        Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function (RegisterComponentTypesEvent $event) {
+        Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function(RegisterComponentTypesEvent $event) {
 //            $event->types[] = Custom::class;
         });
     }
@@ -66,7 +66,7 @@ trait PluginTrait
      */
     public function _registerVariables(): void
     {
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function (Event $event) {
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function(Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
 //            $variable->set('camelCaseCustom', Custom::class);

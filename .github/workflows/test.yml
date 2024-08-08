@@ -1,0 +1,34 @@
+name: Run Tests
+
+on: push
+
+jobs:
+  code-tests:
+    runs-on: [self-hosted, Linux]
+    env:
+      PHP_EXTENSIONS: ctype,curl,dom,iconv,imagick,intl,json,mbstring,openssl,pcre,pdo,reflection,spl,zip
+    container: appmanschap/build-php-node:8.2
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        continue-on-error: true # continue if the cache restore/upload fails
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Execute Easy Code Style test
+        run: composer check-cs
+
+      - name: Execute PHPStan
+        run: composer phpstan
