@@ -3,4 +3,13 @@
 
 {% import '_includes/forms.twig' as forms %}
 
-{# ... #}
+{{ forms.autosuggestField({
+  label: "Youtube API key"|t("youtubeplaylistimporter"),
+  instructions: "The API key will be used to retrieve the playlist items of a specific playlist"|t("youtubeplaylistimporter"),
+  suggestEnvVars: true,
+  suggestAliases: false,
+  id: "youtubeApiKey",
+  name: "youtubeApiKey",
+  value: settings.youtubeApiKey,
+  errors: settings.getErrors("youtubeApiKey"),
+}) }}

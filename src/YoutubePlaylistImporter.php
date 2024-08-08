@@ -2,10 +2,18 @@
 
 namespace appmanschap\youtubeplaylistimporter;
 
+use appmanschap\youtubeplaylistimporter\base\PluginTrait;
+use appmanschap\youtubeplaylistimporter\base\Routes;
 use Craft;
 use appmanschap\youtubeplaylistimporter\models\Settings;
 use craft\base\Model;
 use craft\base\Plugin;
+use craft\helpers\UrlHelper;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 
 /**
  * Youtube Playlist Importer plugin
@@ -18,9 +26,27 @@ use craft\base\Plugin;
  */
 class YoutubePlaylistImporter extends Plugin
 {
+    use PluginTrait;
+    use Routes;
+
+    /**
+     * @var YoutubePlaylistImporter|null
+     */
+    public static ?YoutubePlaylistImporter $plugin;
+
+    /**
+     * @var string
+     */
     public string $schemaVersion = '1.0.0';
+
+    /**
+     * @var bool
+     */
     public bool $hasCpSettings = true;
 
+    /**
+     * @return array[]
+     */
     public static function config(): array
     {
         return [
@@ -30,33 +56,60 @@ class YoutubePlaylistImporter extends Plugin
         ];
     }
 
+    /**
+     * @return void
+     */
     public function init(): void
     {
         parent::init();
+        self::$plugin = $this;
 
         // Defer most setup tasks until Craft is fully initialized
         Craft::$app->onInit(function() {
-            $this->attachEventHandlers();
-            // ...
+            $this->_registerI18nTranslations();
+
+            if (Craft::$app->getRequest()->getIsCpRequest()) {
+                $this->_registerTemplateRoots();
+                $this->_registerNavItems();
+                $this->_registerCpRoutes();
+            }
         });
     }
 
+    /**
+     * @return Model|null
+     * @throws InvalidConfigException
+     */
     protected function createSettingsModel(): ?Model
     {
         return Craft::createObject(Settings::class);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getSettingsResponse($render = false): mixed
+    {
+        if ($render) {
+            return parent::getSettingsResponse();
+        }
+
+        // Just redirect to the plugin settings page
+        return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('youtube-playlist/settings'));
+    }
+
+    /**
+     * @return string|null
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws Exception
+     */
     protected function settingsHtml(): ?string
     {
         return Craft::$app->view->renderTemplate('youtube-playlist-importer/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
         ]);
-    }
-
-    private function attachEventHandlers(): void
-    {
-        // Register event handlers here ...
-        // (see https://craftcms.com/docs/4.x/extend/events.html to get started)
     }
 }
