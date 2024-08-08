@@ -98,3 +98,34 @@ fabric.properties
 /craft/storage/*
 !/craft/storage/rebrand
 
+/.env
+/vendor
+.DS_Store
+
+# CRAFT STORAGE
+storage/*
+!storage/.gitkeep
+!storage/rebrand
+
+# ASSETS
+/public_html/assets/*
+/public_html/cpresources/*
+/public_html/dist/*
+/public_html/favicon.*
+/public_html/sw.*
+/public_html/media
+/public_html/imager
+
+# CRAFT ENVIRONMENT
+.env*
+
+# COMPOSER
+vendor
+
+# BUILD FILES
+node_modules
+yarn-error.log
+npm-debug.log!
+/.idea/dataSources.xml
+/public_html/manifest.webmanifest
+.npmrc

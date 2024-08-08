@@ -1,0 +1,48 @@
+{
+    "name": "appmanschap/craft-youtube-playlist-importer",
+    "description": "Import Playlistitems directly into CraftCMS",
+    "type": "craft-plugin",
+    "license": "proprietary",
+    "support": {
+        "email": "info@appmanschap.nl",
+        "issues": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git/issues?state=open",
+        "source": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
+        "docs": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
+        "rss": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git/releases.atom"
+    },
+    "require": {
+        "php": ">=8.2",
+        "craftcms/cms": "^5.2.0"
+    },
+    "require-dev": {
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "appmanschap\\youtubeplaylistimporter\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "youtube-playlist-importer",
+        "name": "Youtube Playlist Importer",
+        "developer": "Appmanschap",
+        "documentationUrl": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
+        "class": "appmanschap\\youtubeplaylistimporter\\YoutubePlaylistImporter"
+    },
+    "scripts": {
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "phpstan": "phpstan --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2"
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    }
+}
