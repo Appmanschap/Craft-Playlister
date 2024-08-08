@@ -27,6 +27,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
       - name: Execute Easy Code Style test
         run: composer check-cs
 
