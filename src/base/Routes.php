@@ -19,6 +19,10 @@ trait Routes
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             static function(RegisterUrlRulesEvent $event) {
+                $event->rules['youtube-playlist'] = 'youtube-playlist-importer/playlist/index';
+                $event->rules['youtube-playlist/playlists'] = 'youtube-playlist-importer/playlist/index';
+                $event->rules['youtube-playlist/playlists/new'] = 'youtube-playlist-importer/playlist/new';
+
                 $event->rules['youtube-playlist/settings'] = 'youtube-playlist-importer/settings/plugin';
             }
         );

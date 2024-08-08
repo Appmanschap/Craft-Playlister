@@ -1,0 +1,16 @@
+{% extends '_layouts/elementindex' %}
+
+{% block header %}
+  {{ block('pageTitle') }}
+
+  <div class="flex-grow"></div>
+  <div class="flex-grow"></div>
+
+  {{ block('actionButton') }}
+{% endblock %}
+
+{% block actionButton %}
+  <div class="buttons">
+    <a class="btn submit" href="{{ url('youtube-playlist/playlists/new') }}">{{ 'New playlist' | t('youtubeplaylistimporter') }}</a>
+  </div>
+{% endblock %}

@@ -5,9 +5,11 @@ namespace appmanschap\youtubeplaylistimporter\base;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\i18n\PhpMessageSource;
 use craft\services\Elements;
 use craft\services\Fields;
+use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use yii\base\Event;
@@ -34,6 +36,34 @@ trait PluginTrait
     {
         Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function(RegisterTemplateRootsEvent $event) {
             $event->roots[$this->id] = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates/';
+        });
+    }
+
+    public function _registerCpPermissions(): void
+    {
+        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+            $event->permissions[] = [
+                'heading' => Craft::t('youtubeplaylistimporter', 'YouTube Playlist Importer'),
+                'permissions' => [
+                    'youtube-playlist-importer:playlist' => [
+                        'label' => Craft::t('youtubeplaylistimporter', 'View playlists'),
+                        'nested' => [
+                            'youtube-playlist-importer:playlist:create' => [
+                                'label' => Craft::t('youtubeplaylistimporter', 'Create playlists'),
+                            ],
+                            'youtube-playlist-importer:playlist:update' => [
+                                'label' => Craft::t('youtubeplaylistimporter', 'Manage playlists'),
+                            ],
+                            'youtube-playlist-importer:playlist:delete' => [
+                                'label' => Craft::t('youtubeplaylistimporter', 'Delete playlists'),
+                            ],
+                        ],
+                    ],
+                    'youtube-playlist-importer:plugin-settings' => [
+                        'label' => Craft::t('youtubeplaylistimporter', 'Edit Plugin Settings'),
+                    ],
+                ],
+            ];
         });
     }
 
