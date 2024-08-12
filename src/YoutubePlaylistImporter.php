@@ -2,21 +2,17 @@
 
 namespace appmanschap\youtubeplaylistimporter;
 
-use Craft;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use appmanschap\youtubeplaylistimporter\base\PluginTrait;
 use appmanschap\youtubeplaylistimporter\base\Routes;
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
-use appmanschap\youtubeplaylistimporter\elements\PlaylistItem;
 use appmanschap\youtubeplaylistimporter\models\Settings;
+use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\events\RegisterComponentTypesEvent;
 use craft\helpers\UrlHelper;
-use craft\services\Elements;
-use yii\base\Event;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;

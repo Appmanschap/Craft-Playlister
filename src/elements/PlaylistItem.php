@@ -2,13 +2,13 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements;
 
-use Craft;
 use appmanschap\youtubeplaylistimporter\elements\conditions\PlaylistItemCondition;
 use appmanschap\youtubeplaylistimporter\elements\db\PlaylistItemQuery;
+use Craft;
 use craft\base\Element;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use yii\web\Response;
@@ -18,11 +18,17 @@ use yii\web\Response;
  */
 class PlaylistItem extends Element
 {
+    /**
+     * @return string
+     */
     public static function displayName(): string
     {
         return Craft::t('youtube-playlist-importer', 'Playlist item');
     }
 
+    /**
+     * @return string
+     */
     public static function lowerDisplayName(): string
     {
         return Craft::t('youtube-playlist-importer', 'playlist item');
@@ -78,6 +84,10 @@ class PlaylistItem extends Element
         return Craft::createObject(PlaylistItemCondition::class, [static::class]);
     }
 
+    /**
+     * @param  string  $context
+     * @return array<int, array<string, string>>
+     */
     protected static function defineSources(string $context): array
     {
         return [
@@ -88,6 +98,10 @@ class PlaylistItem extends Element
         ];
     }
 
+    /**
+     * @param  string  $source
+     * @return array<int, array<string, string>>
+     */
     protected static function defineActions(string $source): array
     {
         // List any bulk element actions here
@@ -99,6 +113,9 @@ class PlaylistItem extends Element
         return true;
     }
 
+    /**
+     * @return array<int|string, string|array<string, string>>
+     */
     protected static function defineSortOptions(): array
     {
         return [
@@ -126,6 +143,9 @@ class PlaylistItem extends Element
         ];
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     protected static function defineTableAttributes(): array
     {
         return [
@@ -140,6 +160,10 @@ class PlaylistItem extends Element
         ];
     }
 
+    /**
+     * @param  string  $source
+     * @return array<int, string>
+     */
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
@@ -149,6 +173,9 @@ class PlaylistItem extends Element
         ];
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
@@ -162,6 +189,9 @@ class PlaylistItem extends Element
         return null;
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     protected function previewTargets(): array
     {
         $previewTargets = [];
@@ -177,6 +207,9 @@ class PlaylistItem extends Element
         return $previewTargets;
     }
 
+    /**
+     * @return array<string|int, string|array<string, string|array<string, mixed>>>|string|null
+     */
     protected function route(): array|string|null
     {
         // Define how playlist items should be routed when their URLs are requested
@@ -185,7 +218,7 @@ class PlaylistItem extends Element
             [
                 'template' => 'site/template/path',
                 'variables' => ['playlistItem' => $this],
-            ]
+            ],
         ];
     }
 
@@ -242,7 +275,7 @@ class PlaylistItem extends Element
 
     public function prepareEditScreen(Response $response, string $containerId): void
     {
-        /** @var Response|CpScreenResponseBehavior $response */
+        /** @var CpScreenResponseBehavior $response */
         $response->crumbs([
             [
                 'label' => self::pluralDisplayName(),

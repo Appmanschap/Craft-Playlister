@@ -2,14 +2,21 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements\db;
 
-use Craft;
+use craft\base\ElementInterface;
+use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 
 /**
- * Playlist query
+ * @template TKey of array-key
+ * @template TElement of ElementInterface
+ * @extends ElementQuery<TKey, TElement>
  */
 class PlaylistQuery extends ElementQuery
 {
+    /**
+     * @return bool
+     * @throws QueryAbortedException
+     */
     protected function beforePrepare(): bool
     {
         // todo: join the `playlists` table

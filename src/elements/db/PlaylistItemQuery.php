@@ -2,11 +2,13 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements\db;
 
-use Craft;
+use craft\base\ElementInterface;
 use craft\elements\db\ElementQuery;
 
 /**
- * Playlist Item query
+ * @template TKey of array-key
+ * @template TElement of ElementInterface
+ * @extends ElementQuery<TKey, TElement>
  */
 class PlaylistItemQuery extends ElementQuery
 {
