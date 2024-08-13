@@ -1,0 +1,73 @@
+{% extends '_layouts/cp' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set formActions = [
+  {
+    label: 'Save and continue editing'|t('plugin-handle'),
+    redirect: 'youtube-playlist/playlists/edit/{id}' | hash,
+    retainScroll: true,
+    shortcut: true,
+  },
+  {
+    label: 'Save and add another'|t('plugin-handle'),
+    redirect: 'youtube-playlist/playlists/new' | hash,
+    shortcut: true,
+    shift: true,
+  }
+] %}
+
+{% block content %}
+
+  {{ actionInput('youtube-playlist-importer/playlist/save') }}
+  {% if playlist.id %}
+    {{ forms.hidden({
+      id: 'youtube-playlist-id',
+      name: 'id',
+      value: playlist.id ?? null
+    }) }}
+  {% endif %}
+
+  <div>
+    {{ forms.textField({
+      label: 'Youtube Playlist URL',
+      instructions: 'The playlist URL to import'|t('youtube-playlist-importer'),
+      id: 'youtube-playlist',
+      name: 'youtubeUrl',
+      value: playlist.youtubeUrl,
+      required: true,
+      errors: playlist.getErrors('youtubeUrl'),
+    }) }}
+
+    {{ forms.textField({
+      label: 'Playlist name',
+      instructions: 'The playlist URL or playlist ID to import'|t('youtube-playlist-importer'),
+      id: 'playlist-name',
+      name: 'name',
+      value: playlist.name,
+      errors: playlist.getErrors('name'),
+    }) }}
+
+    {{ forms.selectField({
+      label: 'Refresh interval',
+      id: 'playlist-refresh-interval',
+      name: 'refreshInterval',
+      value: playlist.refreshInterval,
+      errors: playlist.getErrors('refreshInterval'),
+      options: [
+        {
+          label: 'Every 5 minutes',
+          value: 5
+        },
+        {
+          label: 'Every 10 minutes',
+          value: 10
+        },
+        {
+          label: 'Every 15 minutes',
+          value: 15
+        }
+      ]
+    }) }}
+  </div>
+{% endblock %}

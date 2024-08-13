@@ -4,6 +4,7 @@
 {% set selectedSubnavItem = 'settings' %}
 {% import '_includes/forms.twig' as forms %}
 
+<div>
 {{ forms.autosuggestField({
   label: "Youtube API key"|t("youtubeplaylistimporter"),
   instructions: "The API key will be used to retrieve the playlist items of a specific playlist"|t("youtubeplaylistimporter"),
@@ -14,3 +15,4 @@
   value: settings.youtubeApiKey,
   errors: settings.getErrors("youtubeApiKey"),
 }) }}
+</div>

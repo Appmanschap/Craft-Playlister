@@ -22,8 +22,8 @@ trait Routes
                 $event->rules['youtube-playlist'] = 'youtube-playlist-importer/playlist/index';
                 $event->rules['youtube-playlist/playlists'] = 'youtube-playlist-importer/playlist/index';
                 $event->rules['youtube-playlist/playlists/new'] = 'youtube-playlist-importer/playlist/new';
-                $event->rules['youtube-playlist/playlists/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/edit';
-//                $event->rules['youtube-playlist/playlists/<elementId:\\d+>'] = 'elements/edit';
+                $event->rules['youtube-playlist/playlists/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/single';
+                $event->rules['youtube-playlist/playlists/edit/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/edit';
 
                 $event->rules['youtube-playlist/settings'] = 'youtube-playlist-importer/settings/plugin';
 

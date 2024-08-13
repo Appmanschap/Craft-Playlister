@@ -6,8 +6,11 @@ use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
+use Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
+use yii\web\HttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\Response;
 
 class PlaylistController extends Controller
@@ -32,7 +35,7 @@ class PlaylistController extends Controller
             'selectedSubnavItem' => 'playlists',
             'fullPageForm' => true,
             'canHaveDrafts' => true,
-            'elementType' => PlaylistElement::class, // @TODO update the elementType
+            'elementType' => PlaylistElement::class,
             'crumbs' => $this->getCrumbs([
                 'label' => 'Playlists',
                 'url' => UrlHelper::cpUrl("youtube-playlist/playlists"),
@@ -41,20 +44,99 @@ class PlaylistController extends Controller
     }
 
     /**
+     * @param  PlaylistElement|null  $playlist
      * @return Response
      * @throws BadRequestHttpException
      * @throws ForbiddenHttpException
      */
-    public function actionNew(): Response
+    public function actionNew(PlaylistElement $playlist = null): Response
     {
         $this->requireCpRequest();
 
         $this->requirePermission('youtube-playlist-importer:playlist:create');
 
-        return $this->renderTemplate('youtube-playlist-importer/playlist/_new', [
+        if (is_null($playlist)) {
+            $playlist = new PlaylistElement();
+        }
+
+        return $this->renderTemplate('youtube-playlist-importer/playlist/_form', [
             'title' => Craft::t('youtubeplaylistimporter', 'New playlist'),
             'selectedSubnavItem' => 'playlists',
             'fullPageForm' => true,
+            'playlist' => $playlist,
+        ]);
+    }
+
+    /**
+     * @throws ForbiddenHttpException
+     * @throws MethodNotAllowedHttpException
+     * @throws BadRequestHttpException
+     * @throws \Throwable
+     */
+    public function actionSave(): ?Response
+    {
+        $this->requireCpRequest();
+
+        # @TODO require POST or PUT for update?
+        $this->requirePostRequest();
+
+        $request = $this->request;
+
+        if ($request->getParam('id') !== null) {
+            $this->requirePermission('youtube-playlist-importer:playlist:update');
+            $playlist = Craft::$app->getElements()->getElementById($request->getParam('id'), PlaylistElement::class, null);
+        } else {
+            $this->requirePermission('youtube-playlist-importer:playlist:create');
+            $playlist = new PlaylistElement();
+        }
+
+        $playlist->youtubeUrl = $request->getParam('youtubeUrl');
+        $playlist->name = $request->getParam('name');
+        $playlist->refreshInterval = $request->getParam('refreshInterval');
+
+        $playlist->validate();
+
+        if ($playlist->hasErrors()) {
+            return $this->asModelFailure(
+                $playlist, // Model, passed back under the key, below...
+                Craft::t('youtubeplaylistimporter', 'Something went wrong!'), // Flash message
+                'playlist', // Route param key
+            );
+        }
+
+        try {
+            Craft::$app->getElements()->saveElement($playlist);
+        } catch (Exception $e) {
+            Craft::error(
+                sprintf('Couldn\'t save playlist element because of the following exception: %s', $e->getMessage()),
+                __METHOD__
+            );
+        }
+
+        $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Form saved.'));
+
+        return $this->redirectToPostedUrl($playlist);
+    }
+
+    public function actionEdit(int $elementId)
+    {
+        $this->requireCpRequest();
+
+        $this->requirePermission('youtube-playlist-importer:playlist:update');
+
+        $playlist = PlaylistElement::findOne($elementId);
+
+        if ($playlist === null) {
+            throw new HttpException(404);
+        }
+
+        return $this->renderTemplate('youtube-playlist-importer/playlist/_form', [
+            'title' => $playlist->title,
+            'selectedSubnavItem' => 'playlists',
+            'fullPageForm' => true,
+            'playlist' => $playlist,
+            'elementId' => $elementId,
+            'site' => Craft::$app->getSites()->getCurrentSite(),
         ]);
     }
 
