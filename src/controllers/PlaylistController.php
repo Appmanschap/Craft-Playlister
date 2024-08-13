@@ -3,6 +3,7 @@
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
+use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
 use Craft;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
@@ -77,7 +78,6 @@ class PlaylistController extends Controller
     {
         $this->requireCpRequest();
 
-        # @TODO require POST or PUT for update?
         $this->requirePostRequest();
 
         $request = $this->request;
@@ -138,6 +138,23 @@ class PlaylistController extends Controller
             'elementId' => $elementId,
             'site' => Craft::$app->getSites()->getCurrentSite(),
         ]);
+    }
+
+    public function actionStartJob(int $playlistId): void
+    {
+        $this->requireCpRequest();
+
+        $this->requirePermission('youtube-playlist-importer:playlist:update');
+
+        $playlist = Craft::$app->getElements()->getElementById($playlistId);
+
+        if (is_null($playlist)) {
+            throw new HttpException(404);
+        }
+
+        YoutubePlaylistImporter::getInstance()->playlistImport->import($playlist);
+//        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
+
     }
 
     /**

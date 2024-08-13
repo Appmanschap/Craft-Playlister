@@ -2,51 +2,57 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements;
 
-use appmanschap\youtubeplaylistimporter\elements\conditions\PlaylistItemCondition;
-use appmanschap\youtubeplaylistimporter\elements\db\PlaylistItemQuery;
+use appmanschap\youtubeplaylistimporter\records\VideoRecord;
 use Craft;
+use appmanschap\youtubeplaylistimporter\elements\conditions\VideoCondition;
+use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
 use craft\base\Element;
+use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
-use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
+use DateTime;
 use yii\web\Response;
 
 /**
- * Playlist Item element type
+ * Video element type
  */
-class PlaylistItem extends Element
+class Video extends Element
 {
-    /**
-     * @return string
-     */
+    public string $description = '';
+    public DateTime $datePublished;
+    public string $videoId = '';
+    public string $playlistId = '';
+    public string $channelId = '';
+    public string $channelTitle = '';
+    public string $defaultAudioLanguage = 'en';
+    public ?string $defaultLanguage = 'en';
+    public string $tags = '';
+
     public static function displayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Playlist item');
+        return Craft::t('youtube-playlist-importer', 'Video');
     }
 
-    /**
-     * @return string
-     */
     public static function lowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'playlist item');
+        return Craft::t('youtube-playlist-importer', 'video');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Playlist items');
+        return Craft::t('youtube-playlist-importer', 'Videos');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'playlist items');
+        return Craft::t('youtube-playlist-importer', 'videos');
     }
 
     public static function refHandle(): ?string
     {
-        return 'playlistitem';
+        return 'video';
     }
 
     public static function trackChanges(): bool
@@ -76,32 +82,24 @@ class PlaylistItem extends Element
 
     public static function find(): ElementQueryInterface
     {
-        return Craft::createObject(PlaylistItemQuery::class, [static::class]);
+        return Craft::createObject(VideoQuery::class, [static::class]);
     }
 
     public static function createCondition(): ElementConditionInterface
     {
-        return Craft::createObject(PlaylistItemCondition::class, [static::class]);
+        return Craft::createObject(VideoCondition::class, [static::class]);
     }
 
-    /**
-     * @param  string  $context
-     * @return array<int, array<string, string>>
-     */
     protected static function defineSources(string $context): array
     {
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('youtube-playlist-importer', 'All playlist items'),
+                'label' => Craft::t('youtube-playlist-importer', 'All videos'),
             ],
         ];
     }
 
-    /**
-     * @param  string  $source
-     * @return array<int, array<string, string>>
-     */
     protected static function defineActions(string $source): array
     {
         // List any bulk element actions here
@@ -113,9 +111,6 @@ class PlaylistItem extends Element
         return true;
     }
 
-    /**
-     * @return array<int|string, string|array<string, string>>
-     */
     protected static function defineSortOptions(): array
     {
         return [
@@ -143,9 +138,6 @@ class PlaylistItem extends Element
         ];
     }
 
-    /**
-     * @return array<string, array<string, string>>
-     */
     protected static function defineTableAttributes(): array
     {
         return [
@@ -160,10 +152,6 @@ class PlaylistItem extends Element
         ];
     }
 
-    /**
-     * @param  string  $source
-     * @return array<int, string>
-     */
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
@@ -173,9 +161,6 @@ class PlaylistItem extends Element
         ];
     }
 
-    /**
-     * @return array<string, array<string, string>>
-     */
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
@@ -185,13 +170,10 @@ class PlaylistItem extends Element
 
     public function getUriFormat(): ?string
     {
-        // If playlist items should have URLs, define their URI format here
+        // If videos should have URLs, define their URI format here
         return null;
     }
 
-    /**
-     * @return array<int, array<string, string>>
-     */
     protected function previewTargets(): array
     {
         $previewTargets = [];
@@ -207,18 +189,15 @@ class PlaylistItem extends Element
         return $previewTargets;
     }
 
-    /**
-     * @return array<string|int, string|array<string, string|array<string, mixed>>>|string|null
-     */
     protected function route(): array|string|null
     {
-        // Define how playlist items should be routed when their URLs are requested
+        // Define how videos should be routed when their URLs are requested
         return [
             'templates/render',
             [
                 'template' => 'site/template/path',
-                'variables' => ['playlistItem' => $this],
-            ],
+                'variables' => ['video' => $this],
+            ]
         ];
     }
 
@@ -228,7 +207,7 @@ class PlaylistItem extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('viewPlaylistItems');
+        return $user->can('viewVideos');
     }
 
     public function canSave(User $user): bool
@@ -237,7 +216,7 @@ class PlaylistItem extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('savePlaylistItems');
+        return $user->can('saveVideos');
     }
 
     public function canDuplicate(User $user): bool
@@ -246,7 +225,7 @@ class PlaylistItem extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('savePlaylistItems');
+        return $user->can('saveVideos');
     }
 
     public function canDelete(User $user): bool
@@ -255,7 +234,7 @@ class PlaylistItem extends Element
             return true;
         }
         // todo: implement user permissions
-        return $user->can('deletePlaylistItems');
+        return $user->can('deleteVideos');
     }
 
     public function canCreateDrafts(User $user): bool
@@ -265,21 +244,21 @@ class PlaylistItem extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('playlist-items/%s', $this->getCanonicalId());
+        return sprintf('videos/%s', $this->getCanonicalId());
     }
 
     public function getPostEditUrl(): ?string
     {
-        return UrlHelper::cpUrl('playlist-items');
+        return UrlHelper::cpUrl('videos');
     }
 
     public function prepareEditScreen(Response $response, string $containerId): void
     {
-        /** @var CpScreenResponseBehavior $response */
+        /** @var Response|CpScreenResponseBehavior $response */
         $response->crumbs([
             [
                 'label' => self::pluralDisplayName(),
-                'url' => UrlHelper::cpUrl('playlist-items'),
+                'url' => UrlHelper::cpUrl('videos'),
             ],
         ]);
     }
@@ -287,7 +266,14 @@ class PlaylistItem extends Element
     public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
-            // todo: update the `playlistitems` table
+            if (!$isNew) {
+                $record = VideoRecord::findOrFail($this->id);
+            } else {
+                $record = new VideoRecord();
+                $record->id = $this->id;
+            }
+
+            $record->fillByElement($this)->save(false);
         }
 
         parent::afterSave($isNew);

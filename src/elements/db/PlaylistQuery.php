@@ -5,7 +5,6 @@ namespace appmanschap\youtubeplaylistimporter\elements\db;
 use craft\base\ElementInterface;
 use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
-use craft\helpers\Db;
 
 /**
  * @template TKey of array-key
@@ -23,7 +22,7 @@ class PlaylistQuery extends ElementQuery
         $this->joinElementTable("{{%youtube_playlists}}");
 
         $this->query->select([
-            "{{%youtube_playlists}}.*"
+            "{{%youtube_playlists}}.*",
         ]);
 
         // todo: apply any custom query params

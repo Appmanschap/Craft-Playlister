@@ -3,7 +3,6 @@
 namespace appmanschap\youtubeplaylistimporter\records;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use Craft;
 use craft\db\ActiveRecord;
 use craft\db\SoftDeleteTrait;
 use craft\records\Element;
@@ -17,7 +16,7 @@ use yii\db\ActiveQueryInterface;
  * @property string $youtubeUrl
  * @property string $name
  * @property int $refreshInterval
- * @property int $uid
+ * @property string|null $uid
  */
 class PlaylistRecord extends ActiveRecord
 {

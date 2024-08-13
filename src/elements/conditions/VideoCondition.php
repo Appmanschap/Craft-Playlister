@@ -2,16 +2,17 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements\conditions;
 
+use Craft;
 use craft\elements\conditions\ElementCondition;
 
 /**
- * Playlist Item condition
+ * Video condition
  */
-class PlaylistItemCondition extends ElementCondition
+class VideoCondition extends ElementCondition
 {
     protected function selectableConditionRules(): array
     {
-        return array_merge(parent::selectableConditionRules(), [
+        return array_merge(parent::conditionRuleTypes(), [
             // ...
         ]);
     }

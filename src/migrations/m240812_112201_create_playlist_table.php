@@ -2,7 +2,6 @@
 
 namespace appmanschap\youtubeplaylistimporter\migrations;
 
-use Craft;
 use craft\db\Migration;
 
 /**

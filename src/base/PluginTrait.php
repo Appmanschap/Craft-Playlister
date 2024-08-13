@@ -4,6 +4,7 @@ namespace appmanschap\youtubeplaylistimporter\base;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use appmanschap\youtubeplaylistimporter\elements\PlaylistItem;
+use appmanschap\youtubeplaylistimporter\elements\Video;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
@@ -41,6 +42,9 @@ trait PluginTrait
         });
     }
 
+    /**
+     * @return void
+     */
     public function _registerCpPermissions(): void
     {
         Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
@@ -79,7 +83,7 @@ trait PluginTrait
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             static function(RegisterComponentTypesEvent $event) {
                 $event->types[] = Playlist::class;
-                $event->types[] = PlaylistItem::class;
+                $event->types[] = Video::class;
             }
         );
     }

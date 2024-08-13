@@ -2,17 +2,17 @@
 
 namespace appmanschap\youtubeplaylistimporter;
 
-use appmanschap\youtubeplaylistimporter\base\PluginTrait;
-use appmanschap\youtubeplaylistimporter\base\Routes;
-use appmanschap\youtubeplaylistimporter\elements\Playlist;
-use appmanschap\youtubeplaylistimporter\models\Settings;
 use Craft;
-use craft\base\Model;
-use craft\base\Plugin;
-use craft\helpers\UrlHelper;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use appmanschap\youtubeplaylistimporter\base\PluginTrait;
+use appmanschap\youtubeplaylistimporter\base\Routes;
+use appmanschap\youtubeplaylistimporter\models\Settings;
+use appmanschap\youtubeplaylistimporter\services\PlaylistImport;
+use craft\base\Model;
+use craft\base\Plugin;
+use craft\helpers\UrlHelper;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
@@ -25,6 +25,7 @@ use yii\base\InvalidRouteException;
  * @author Appmanschap <info@appmanschap.nl>
  * @copyright Appmanschap
  * @license https://craftcms.github.io/license/ Craft License
+ * @property-read PlaylistImport $playlistImport
  */
 class YoutubePlaylistImporter extends Plugin
 {
@@ -52,9 +53,7 @@ class YoutubePlaylistImporter extends Plugin
     public static function config(): array
     {
         return [
-            'components' => [
-                // Define component configs here...
-            ],
+            'components' => ['playlistImport' => PlaylistImport::class],
         ];
     }
 

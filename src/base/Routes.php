@@ -24,8 +24,12 @@ trait Routes
                 $event->rules['youtube-playlist/playlists/new'] = 'youtube-playlist-importer/playlist/new';
                 $event->rules['youtube-playlist/playlists/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/single';
                 $event->rules['youtube-playlist/playlists/edit/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/edit';
+                $event->rules['youtube-playlist/playlists/start-job/<playlistId:\\d+>'] = 'youtube-playlist-importer/playlist/start-job';
 
                 $event->rules['youtube-playlist/settings'] = 'youtube-playlist-importer/settings/plugin';
+
+                $event->rules['youtube-playlist/videos'] = 'youtube-playlist-importer/video/index';
+                $event->rules['youtube-playlist/videos/<elementId:\\d+>'] = 'elements/edit';
 
 //                Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
 //                    $event->rules['playlists'] = ['template' => 'youtube-playlist-importer/playlists/_index.twig'];
@@ -51,6 +55,10 @@ trait Routes
                     'playlists' => [
                         'url' => 'youtube-playlist/playlists',
                         'label' => 'Playlist',
+                    ],
+                    'videos' => [
+                        'url' => 'youtube-playlist/videos',
+                        'label' => 'Video',
                     ],
                     'settings' => [
                         'url' => 'youtube-playlist/settings',

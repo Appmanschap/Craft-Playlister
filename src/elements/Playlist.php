@@ -315,7 +315,6 @@ class Playlist extends Element
             } else {
                 $record = new PlaylistRecord();
                 $record->id = $this->id;
-
             }
 
             $record->fillByElement($this)->save(false);
