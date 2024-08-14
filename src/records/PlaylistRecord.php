@@ -12,10 +12,12 @@ use yii\db\ActiveQueryInterface;
 /**
  * Playlist Record record
  *
- * @property int $id
+ * @property int|null $id
+ * @property string $playlistId
  * @property string $youtubeUrl
  * @property string $name
  * @property int $refreshInterval
+ * @property int $limit
  * @property string|null $uid
  */
 class PlaylistRecord extends ActiveRecord
@@ -60,9 +62,11 @@ class PlaylistRecord extends ActiveRecord
      */
     public function fillByElement(PlaylistElement $playlistElement): PlaylistRecord
     {
+        $this->playlistId = $playlistElement->playlistId;
         $this->youtubeUrl = $playlistElement->youtubeUrl;
         $this->name = $playlistElement->name;
         $this->refreshInterval = $playlistElement->refreshInterval;
+        $this->limit = $playlistElement->limit;
         $this->uid = $playlistElement->uid;
         return $this;
     }

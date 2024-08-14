@@ -2,11 +2,13 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements\db;
 
-use Craft;
+use craft\base\ElementInterface;
 use craft\elements\db\ElementQuery;
 
 /**
- * Video query
+ * @template TKey of array-key
+ * @template TElement of ElementInterface
+ * @extends ElementQuery<TKey, TElement>
  */
 class VideoQuery extends ElementQuery
 {
@@ -14,7 +16,7 @@ class VideoQuery extends ElementQuery
     {
         $this->joinElementTable("{{%youtube_playlist_videos}}");
 
-        $this->query->select([
+        $this->query?->select([
             "{{%youtube_playlist_videos}}.*",
         ]);
 

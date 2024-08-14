@@ -1,0 +1,64 @@
+{% extends '_layouts/cp' %}
+
+{% import "_includes/forms" as forms %}
+
+{% block content %}
+<div class="flex-fields">
+    <fieldset class="field width-50" data-attribute="videoDetails">
+        {{ forms.textField({
+          label: 'Video title',
+          id: 'video-title',
+          name: 'videoTitle',
+          value: video.title,
+          required: true,
+          readonly: true,
+          errors: video.getErrors('title'),
+        }) }}
+
+        {{ forms.textField({
+          label: 'Published at',
+          id: 'video-published-at',
+          name: 'videoPublishedAt',
+          value: video.datePublished | date('short'),
+          required: false,
+          readonly: true,
+          errors: video.getErrors('datePublished'),
+        }) }}
+
+        {{ forms.textareaField({
+          label: 'Video description',
+          id: 'video-description',
+          name: 'videoDescription',
+          value: video.description,
+          required: false,
+          readonly: true,
+          errors: video.getErrors('description'),
+          rows: 15
+        }) }}
+
+        {{ forms.textareaField({
+          label: 'Video tags',
+          id: 'video-tags',
+          name: 'videoTags',
+          value: video.tags|split(', ')|join('\r\n'),
+          required: false,
+          readonly: true,
+          errors: video.getErrors('tags'),
+          rows:5
+        }) }}
+
+        <div id="channel-field" class="field" data-attribute="channel-title">
+            <div class="heading">
+                <label id="channel-title-label" for="channel-title">Channel</label>
+            </div>
+            <div class="ltr">
+                <a href="https://youtube.com/channel/{{ video.channelId }}" target="_blank" rel="noopener noreferrer">View "{{ video.channelTitle }}" channel</a>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="field width-50" data-attribute="videoPlayer">
+        <div class="heading"><label id="video-title-label" for="video-title">Video</label></div>
+        <iframe width="480" height="300" src="https://www.youtube-nocookie.com/embed/{{ video.videoId }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <fieldset>
+</div>
+{% endblock %}

@@ -1,9 +1,8 @@
 <?php
+
 namespace appmanschap\youtubeplaylistimporter\services\clients;
 
 use Google\Service\YouTube;
-use Google\Service\YouTube\Playlist;
-use Psr\Http\Message\RequestInterface;
 
 interface PlaylistClient
 {

@@ -3,7 +3,6 @@
 namespace appmanschap\youtubeplaylistimporter\base;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
-use appmanschap\youtubeplaylistimporter\elements\PlaylistItem;
 use appmanschap\youtubeplaylistimporter\elements\Video;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;

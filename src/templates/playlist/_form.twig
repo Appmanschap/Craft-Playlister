@@ -5,7 +5,7 @@
 {% set formActions = [
   {
     label: 'Save and continue editing'|t('plugin-handle'),
-    redirect: 'youtube-playlist/playlists/edit/{id}' | hash,
+    redirect: 'youtube-playlist/playlists/{id}' | hash,
     retainScroll: true,
     shortcut: true,
   },
@@ -31,6 +31,8 @@
 {% block content %}
 
   {{ actionInput('youtube-playlist-importer/playlist/save') }}
+  {{ redirectInput('youtube-playlist/playlists/{id}') }}
+
   {% if playlist.id %}
     {{ forms.hidden({
       id: 'youtube-playlist-id',
@@ -40,6 +42,15 @@
   {% endif %}
 
   <div>
+    {{ forms.textField({
+      label: 'Youtube Playlist ID',
+      id: 'youtube-playlist-id',
+      name: 'playlistId',
+      value: playlist.playlistId,
+      required: true,
+      errors: playlist.getErrors('playlistId'),
+    }) }}
+
     {{ forms.textField({
       label: 'Youtube Playlist URL',
       instructions: 'The playlist URL to import'|t('youtube-playlist-importer'),
@@ -78,6 +89,32 @@
           label: 'Every 15 minutes',
           value: 15
         }
+      ]
+    }) }}
+
+    {{ forms.selectField({
+      label: 'Limit',
+      id: 'playlist-video-limit',
+      name: 'limit',
+      value: playlist.limit,
+      errors: playlist.getErrors('limit'),
+      options: [
+        {
+          label: '50',
+          value: 50
+        },
+        {
+          label: '100',
+          value: 100
+        },
+        {
+          label: '150',
+          value: 150
+        },
+         {
+           label: 'all',
+           value: 9999
+         }
       ]
     }) }}
   </div>

@@ -13,7 +13,7 @@ use yii\db\ActiveQueryInterface;
 /**
  * Video Record record
  *
- * @property int $id
+ * @property int|null $id
  * @property string $title
  * @property string $description
  * @property DateTime $datePublished
@@ -23,6 +23,7 @@ use yii\db\ActiveQueryInterface;
  * @property string $channelTitle
  * @property string $defaultAudioLanguage
  * @property string|null $defaultLanguage
+ * @property bool $embeddable
  * @property string $tags
  * @property string|null $uid
  */
@@ -65,7 +66,7 @@ class VideoRecord extends ActiveRecord
      */
     public function fillByElement(VideoElement $videoElement): VideoRecord
     {
-        $this->title = $videoElement->title;
+        $this->title = $videoElement->title ?? '';
         $this->description = $videoElement->description;
         $this->datePublished = $videoElement->datePublished;
         $this->videoId = $videoElement->videoId;
@@ -74,6 +75,7 @@ class VideoRecord extends ActiveRecord
         $this->channelTitle = $videoElement->channelTitle;
         $this->defaultAudioLanguage = $videoElement->defaultAudioLanguage;
         $this->defaultLanguage = $videoElement->defaultLanguage;
+        $this->embeddable = $videoElement->embeddable;
         $this->tags = $videoElement->tags;
         $this->uid = $videoElement->uid;
         return $this;

@@ -21,7 +21,7 @@ class PlaylistQuery extends ElementQuery
     {
         $this->joinElementTable("{{%youtube_playlists}}");
 
-        $this->query->select([
+        $this->query?->select([
             "{{%youtube_playlists}}.*",
         ]);
 

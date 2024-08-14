@@ -11,7 +11,6 @@ use DateTime;
 use Google\Service\Exception;
 use Google\Service\YouTube\PlaylistItem as YouTubePlaylistItem;
 use Google\Service\YouTube\Video as YoutubeVideo;
-use Google\Service\YouTube\VideoSnippet as YoutubeVideoSnippet;
 use Throwable;
 use yii\base\Component;
 
@@ -20,8 +19,19 @@ use yii\base\Component;
  */
 class PlaylistImport extends Component
 {
+    /**
+     * @var PlaylistClient
+     */
     private PlaylistClient $client;
 
+    /**
+     * @var string
+     */
+    private string $playlistId;
+
+    /**
+     * @var string|null
+     */
     private ?string $nextPageToken = null;
 
     /**
@@ -37,7 +47,12 @@ class PlaylistImport extends Component
     /**
      * @var int
      */
-    private int $limit = 100;
+    private int $retrievedAmount = 0;
+
+    /**
+     * @var int
+     */
+    private int $limit = 50;
 
     /**
      * @param  PlaylistElement  $playlist
@@ -46,10 +61,8 @@ class PlaylistImport extends Component
      */
     public function import(PlaylistElement $playlist): void
     {
-        if ($this->firstImport === false && !$this->nextPageToken) {
-            # Stop importing when there is not a next page to retrieve
-            return;
-        }
+        $this->playlistId = $playlist->playlistId;
+        $this->limit = $playlist->limit ?? 50;
 
         $this->setClient();
 
@@ -60,12 +73,21 @@ class PlaylistImport extends Component
 
         $this->firstImport = false;
 
-        while ($this->nextPageToken) {
+        while ($this->canImport()) {
             $this->import($playlist);
         }
     }
 
-    private function setClient()
+    private function canImport(): bool
+    {
+        return $this->firstImport
+            || ($this->firstImport === false && $this->nextPageToken && $this->retrievedAmount < $this->limit);
+    }
+
+    /**
+     * @return void
+     */
+    private function setClient(): void
     {
         $this->client = new YoutubeClient();
     }
@@ -77,7 +99,7 @@ class PlaylistImport extends Component
     private function getPlaylistItems(): array
     {
         $options = [
-            'playlistId' => 'PLMBgyT0oxOrsDdPyqKEVwdYt-yPgGyFs1', # @TODO: Replace by actual playlistId
+            'playlistId' => $this->playlistId,
             'maxResults' => $this->maxResults,
         ];
 
@@ -88,12 +110,16 @@ class PlaylistImport extends Component
         $results = $this->client->getYouTubeService()->playlistItems->listPlaylistItems('contentDetails', $options);
 
         $this->nextPageToken = $results->getNextPageToken();
+        $items = $results->getItems();
 
-        return $results->getItems();
+        $this->retrievedAmount += count($items);
+
+        return $items;
     }
 
     /**
      * @param  array<int, YouTubePlaylistItem>  $playlistItems
+     * @return array<int, YoutubeVideo>
      * @throws Exception
      */
     private function getVideosByPlaylistItems(array $playlistItems): array
@@ -101,9 +127,10 @@ class PlaylistImport extends Component
         $videoListResponse = $this->client->getYouTubeService()->videos->listVideos([
             'contentDetails',
             'localizations',
-            'snippet'
+            'snippet',
+            'status',
         ], [
-            'id' => array_map(static fn ($playlistItem) => $playlistItem->getContentDetails()->getVideoId(), $playlistItems)
+            'id' => array_map(static fn($playlistItem) => $playlistItem->getContentDetails()->getVideoId(), $playlistItems),
         ]);
 
         return $videoListResponse->getItems();
@@ -112,7 +139,7 @@ class PlaylistImport extends Component
     /**
      * @param  PlaylistElement  $playlist
      * @param  array<int, YouTubePlaylistItem>  $playlistItems
-     * @param  array<int, YoutubeVideo>  $items
+     * @param  array<int, YoutubeVideo>  $videos
      * @return void
      */
     private function createVideoElements(PlaylistElement $playlist, array $playlistItems, array $videos)
@@ -120,17 +147,20 @@ class PlaylistImport extends Component
         foreach ($playlistItems as $playlistItem) {
             /** @var YouTubePlaylistItem $playlistItem */
             $videoId = $playlistItem->getContentDetails()->getVideoId();
-            $youtubeVideos = array_values(array_filter($videos, static fn (YoutubeVideo $video) => $video->id === $videoId));
+
+            /** @var YoutubeVideo[] $youtubeVideos */
+            $youtubeVideos = array_values(array_filter($videos, static fn(YoutubeVideo $video) => $video->id === $videoId));
 
             if (empty($youtubeVideos)) {
                 continue;
             }
 
-            /** @var YoutubeVideoSnippet $youtubeVideoSnippet */
             $youtubeVideoSnippet = $youtubeVideos[0]->getSnippet();
+            $youtubeStatus = $youtubeVideos[0]->getStatus();
 
+            /** @var VideoElement|null $video */
             $video = VideoElement::find()->where([
-                'videoId' => $videoId
+                'videoId' => $videoId,
             ])->one();
 
             if (null === $video) {
@@ -138,15 +168,16 @@ class PlaylistImport extends Component
             }
 
             $video->videoId = $videoId;
-            $video->title = $youtubeVideoSnippet->title;
-            $video->description = $youtubeVideoSnippet->description;
-            $video->datePublished = new DateTime($youtubeVideoSnippet->datePublished);
-            $video->playlistId = 'PLMBgyT0oxOrsDdPyqKEVwdYt-yPgGyFs1'; # @TODO: Replace by actual playlistId
-            $video->channelId = $youtubeVideoSnippet->channelId;
-            $video->channelTitle = $youtubeVideoSnippet->channelTitle;
-            $video->defaultAudioLanguage = $youtubeVideoSnippet->defaultAudioLanguage;
-            $video->defaultLanguage = $youtubeVideoSnippet->defaultLanguage;
-            $video->tags = implode(', ', $youtubeVideoSnippet->tags);
+            $video->title = $youtubeVideoSnippet->getTitle();
+            $video->description = $youtubeVideoSnippet->getDescription();
+            $video->datePublished = new DateTime($youtubeVideoSnippet->getPublishedAt());
+            $video->playlistId = $this->playlistId;
+            $video->channelId = $youtubeVideoSnippet->getChannelId();
+            $video->channelTitle = $youtubeVideoSnippet->getChannelTitle();
+            $video->defaultAudioLanguage = $youtubeVideoSnippet->getDefaultAudioLanguage();
+            $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
+            $video->embeddable = $youtubeStatus->getEmbeddable();
+            $video->tags = implode(', ', $youtubeVideoSnippet->getTags());
 
             try {
                 Craft::$app->getElements()->saveElement($video);

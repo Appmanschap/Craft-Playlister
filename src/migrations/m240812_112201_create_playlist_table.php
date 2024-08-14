@@ -16,9 +16,11 @@ class m240812_112201_create_playlist_table extends Migration
     {
         $this->createTable('{{%youtube_playlists}}', [
             'id' => $this->primaryKey(),
+            'playlistId' => $this->string()->notNull(),
             'youtubeUrl' => $this->string()->notNull(),
             'name' => $this->string()->notNull(),
             'refreshInterval' => $this->integer()->unsigned()->defaultValue(5),
+            'limit' => $this->integer()->unsigned()->defaultValue(50),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'dateDeleted' => $this->dateTime()->null(),

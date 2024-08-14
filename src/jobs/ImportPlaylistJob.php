@@ -21,8 +21,7 @@ class ImportPlaylistJob extends BaseJob
      * @var string|null
      */
     public ?string $description = 'Import Playlist items for Playlist';
-    
-    
+
     public function execute($queue): void
     {
         try {
@@ -30,7 +29,7 @@ class ImportPlaylistJob extends BaseJob
         } catch (\Throwable $exception) {
             Craft::error(
                 sprintf(
-                    'Youtube playlist import task failed %s, $s',
+                    'Youtube playlist import task failed %s, %s',
                     $exception->getMessage(),
                     $exception->getTraceAsString()
                 ),
@@ -38,7 +37,7 @@ class ImportPlaylistJob extends BaseJob
             );
         } finally {
             // Queue up a new job
-            Craft::$app->getQueue()->delay($this->playlist->refreshInterval)->push(new ImportPlaylistJob($this->playlist));
+            Craft::$app->getQueue()->delay($this->playlist->refreshInterval)->push(new ImportPlaylistJob(['playlist' => $this->playlist]));
         }
     }
 

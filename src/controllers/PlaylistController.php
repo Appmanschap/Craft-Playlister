@@ -3,11 +3,14 @@
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
+use appmanschap\youtubeplaylistimporter\supports\Cast;
 use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
 use Craft;
+use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use Exception;
+use Throwable;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
@@ -72,7 +75,7 @@ class PlaylistController extends Controller
      * @throws ForbiddenHttpException
      * @throws MethodNotAllowedHttpException
      * @throws BadRequestHttpException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function actionSave(): ?Response
     {
@@ -84,15 +87,28 @@ class PlaylistController extends Controller
 
         if ($request->getParam('id') !== null) {
             $this->requirePermission('youtube-playlist-importer:playlist:update');
-            $playlist = Craft::$app->getElements()->getElementById($request->getParam('id'), PlaylistElement::class, null);
+            $playlist = Craft::$app->getElements()->getElementById(Cast::mixedToInt($request->getParam('id')), PlaylistElement::class);
+
+            if (!$playlist) {
+                throw new \yii\base\Exception('No playlist found with that id.');
+            }
         } else {
             $this->requirePermission('youtube-playlist-importer:playlist:create');
             $playlist = new PlaylistElement();
         }
 
-        $playlist->youtubeUrl = $request->getParam('youtubeUrl');
-        $playlist->name = $request->getParam('name');
-        $playlist->refreshInterval = $request->getParam('refreshInterval');
+        $url_parts = parse_url(Cast::mixedToString($request->getParam('youtubeUrl')));
+        parse_str($url_parts['query'] ?? '', $query_parts);
+
+        if (!isset($query_parts['list']) || !is_string($query_parts['list'])) {
+            throw new Exception('Playlist could not be found from the url.');
+        }
+
+        $playlist->playlistId = $query_parts['list'];
+        $playlist->youtubeUrl = Cast::mixedToString($request->getParam('youtubeUrl'));
+        $playlist->name = Cast::mixedToString($request->getParam('name'));
+        $playlist->refreshInterval = Cast::mixedToInt($request->getParam('refreshInterval'));
+        $playlist->limit = Cast::mixedToInt($request->getParam('limit'));
 
         $playlist->validate();
 
@@ -113,12 +129,20 @@ class PlaylistController extends Controller
             );
         }
 
-        $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Form saved.'));
+        $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Playlist saved.'));
 
         return $this->redirectToPostedUrl($playlist);
     }
 
-    public function actionEdit(int $elementId)
+    /**
+     * @param int $elementId
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws HttpException
+     * @throws SiteNotFoundException
+     */
+    public function actionEdit(int $elementId): Response
     {
         $this->requireCpRequest();
 
@@ -146,15 +170,14 @@ class PlaylistController extends Controller
 
         $this->requirePermission('youtube-playlist-importer:playlist:update');
 
-        $playlist = Craft::$app->getElements()->getElementById($playlistId);
+        $playlist = Craft::$app->getElements()->getElementById($playlistId, PlaylistElement::class);
 
         if (is_null($playlist)) {
             throw new HttpException(404);
         }
 
-        YoutubePlaylistImporter::getInstance()->playlistImport->import($playlist);
-//        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
-
+//        YoutubePlaylistImporter::getInstance()->playlistImport->import($playlist);
+        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
     }
 
     /**

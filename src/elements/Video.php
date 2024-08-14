@@ -2,17 +2,20 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements;
 
-use appmanschap\youtubeplaylistimporter\records\VideoRecord;
-use Craft;
 use appmanschap\youtubeplaylistimporter\elements\conditions\VideoCondition;
 use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
+use appmanschap\youtubeplaylistimporter\records\VideoRecord;
+use Craft;
 use craft\base\Element;
-use craft\elements\User;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use DateTime;
+use Throwable;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 use yii\web\Response;
 
 /**
@@ -28,6 +31,7 @@ class Video extends Element
     public string $channelTitle = '';
     public string $defaultAudioLanguage = 'en';
     public ?string $defaultLanguage = 'en';
+    public bool $embeddable = false;
     public string $tags = '';
 
     public static function displayName(): string
@@ -90,6 +94,10 @@ class Video extends Element
         return Craft::createObject(VideoCondition::class, [static::class]);
     }
 
+    /**
+     * @param  string  $context
+     * @return array<int, array<string, string>>
+     */
     protected static function defineSources(string $context): array
     {
         return [
@@ -100,6 +108,10 @@ class Video extends Element
         ];
     }
 
+    /**
+     * @param  string  $source
+     * @return array<int, array<string, string>>
+     */
     protected static function defineActions(string $source): array
     {
         // List any bulk element actions here
@@ -111,6 +123,9 @@ class Video extends Element
         return true;
     }
 
+    /**
+     * @return array<int|string, string|array<string, string>>
+     */
     protected static function defineSortOptions(): array
     {
         return [
@@ -138,6 +153,9 @@ class Video extends Element
         ];
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     protected static function defineTableAttributes(): array
     {
         return [
@@ -152,6 +170,10 @@ class Video extends Element
         ];
     }
 
+    /**
+     * @param  string  $source
+     * @return array<int, string>
+     */
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
@@ -161,6 +183,9 @@ class Video extends Element
         ];
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     protected function defineRules(): array
     {
         return array_merge(parent::defineRules(), [
@@ -174,6 +199,9 @@ class Video extends Element
         return null;
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     protected function previewTargets(): array
     {
         $previewTargets = [];
@@ -189,6 +217,9 @@ class Video extends Element
         return $previewTargets;
     }
 
+    /**
+     * @return array<string|int, string|array<string, string|array<string, mixed>>>|string|null
+     */
     protected function route(): array|string|null
     {
         // Define how videos should be routed when their URLs are requested
@@ -197,7 +228,7 @@ class Video extends Element
             [
                 'template' => 'site/template/path',
                 'variables' => ['video' => $this],
-            ]
+            ],
         ];
     }
 
@@ -206,8 +237,8 @@ class Video extends Element
         if (parent::canView($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('viewVideos');
+
+        return $user->can('youtube-playlist-importer:videos');
     }
 
     public function canSave(User $user): bool
@@ -215,8 +246,8 @@ class Video extends Element
         if (parent::canSave($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('saveVideos');
+
+        return $user->can('youtube-playlist-importer:videos:update');
     }
 
     public function canDuplicate(User $user): bool
@@ -224,8 +255,8 @@ class Video extends Element
         if (parent::canDuplicate($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('saveVideos');
+
+        return $user->can('youtube-playlist-importer:videos:update');
     }
 
     public function canDelete(User $user): bool
@@ -233,8 +264,8 @@ class Video extends Element
         if (parent::canSave($user)) {
             return true;
         }
-        // todo: implement user permissions
-        return $user->can('deleteVideos');
+
+        return $user->can('youtube-playlist-importer:videos:delete');
     }
 
     public function canCreateDrafts(User $user): bool
@@ -244,7 +275,7 @@ class Video extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('videos/%s', $this->getCanonicalId());
+        return sprintf('youtube-playlist/videos/%s', $this->getCanonicalId());
     }
 
     public function getPostEditUrl(): ?string
@@ -254,7 +285,7 @@ class Video extends Element
 
     public function prepareEditScreen(Response $response, string $containerId): void
     {
-        /** @var Response|CpScreenResponseBehavior $response */
+        /** @var CpScreenResponseBehavior $response */
         $response->crumbs([
             [
                 'label' => self::pluralDisplayName(),
@@ -263,11 +294,17 @@ class Video extends Element
         ]);
     }
 
+    /**
+     * @param bool $isNew
+     * @return void
+     * @throws Exception
+     * @throws \yii\db\Exception
+     */
     public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
             if (!$isNew) {
-                $record = VideoRecord::findOrFail($this->id);
+                $record = VideoRecord::findOrFail($this->id ?? 0);
             } else {
                 $record = new VideoRecord();
                 $record->id = $this->id;
@@ -277,5 +314,26 @@ class Video extends Element
         }
 
         parent::afterSave($isNew);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     * @throws Exception
+     * @throws StaleObjectException
+     */
+    public function afterDelete(): void
+    {
+        $record = VideoRecord::findOrFail($this->id ?? 0);
+
+        if ($this->hardDelete) {
+            $record->delete();
+        } else {
+            if (method_exists($record, 'softDelete')) {
+                $record->softDelete();
+            }
+        }
+
+        parent::afterDelete();
     }
 }

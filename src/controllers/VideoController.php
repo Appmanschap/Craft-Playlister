@@ -1,10 +1,15 @@
 <?php
+
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
 use Craft;
+use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
+use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
+use yii\web\HttpException;
 use yii\web\Response;
 
 class VideoController extends Controller
@@ -30,6 +35,36 @@ class VideoController extends Controller
                 'label' => 'Videos',
                 'url' => UrlHelper::cpUrl("youtube-playlist/videos"),
             ]),
+        ]);
+    }
+
+    /**
+     * @param int $elementId
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws HttpException
+     * @throws SiteNotFoundException
+     */
+    public function actionEdit(int $elementId): Response
+    {
+        $this->requireCpRequest();
+
+        $this->requirePermission('youtube-playlist-importer:video:update');
+
+        $video = VideoElement::findOne($elementId);
+
+        if ($video === null) {
+            throw new HttpException(404);
+        }
+
+        return $this->renderTemplate('youtube-playlist-importer/videos/_form', [
+            'title' => $video->title,
+            'selectedSubnavItem' => 'videos',
+            'fullPageForm' => false,
+            'video' => $video,
+            'elementId' => $elementId,
+            'site' => Craft::$app->getSites()->getCurrentSite(),
         ]);
     }
 
