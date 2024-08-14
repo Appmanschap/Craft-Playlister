@@ -23,13 +23,12 @@
   <div class="flex-grow"></div>
   <div class="flex-grow"></div>
 
-  <a class="btn" href="{{ cpUrl('youtube-playlist/playlists/start-job/' ~ playlist.id) }}">Run job</a>
+  <a class="formsubmit btn" data-action="{{ 'youtube-playlist-importer/playlist/start-job' }}" data-redirect="{{ '{cpEditUrl}' |hash }}">Run job</a>
 
   {{ block('actionButton') }}
 {% endblock %}
 
 {% block content %}
-
   {{ actionInput('youtube-playlist-importer/playlist/save') }}
   {{ redirectInput('youtube-playlist/playlists/{id}') }}
 

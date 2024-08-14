@@ -4,7 +4,6 @@ namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
 use appmanschap\youtubeplaylistimporter\supports\Cast;
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
 use Craft;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
@@ -72,6 +71,36 @@ class PlaylistController extends Controller
     }
 
     /**
+     * @param int $elementId
+     * @return Response
+     * @throws BadRequestHttpException
+     * @throws ForbiddenHttpException
+     * @throws HttpException
+     * @throws SiteNotFoundException
+     */
+    public function actionEdit(int $elementId): Response
+    {
+        $this->requireCpRequest();
+
+        $this->requirePermission('youtube-playlist-importer:playlist:update');
+
+        $playlist = PlaylistElement::findOne($elementId);
+
+        if ($playlist === null) {
+            throw new HttpException(404);
+        }
+
+        return $this->renderTemplate('youtube-playlist-importer/playlist/_form', [
+            'title' => $playlist->title,
+            'selectedSubnavItem' => 'playlists',
+            'fullPageForm' => true,
+            'playlist' => $playlist,
+            'elementId' => $elementId,
+            'site' => Craft::$app->getSites()->getCurrentSite(),
+        ]);
+    }
+
+    /**
      * @throws ForbiddenHttpException
      * @throws MethodNotAllowedHttpException
      * @throws BadRequestHttpException
@@ -135,49 +164,27 @@ class PlaylistController extends Controller
     }
 
     /**
-     * @param int $elementId
      * @return Response
      * @throws BadRequestHttpException
      * @throws ForbiddenHttpException
      * @throws HttpException
-     * @throws SiteNotFoundException
      */
-    public function actionEdit(int $elementId): Response
+    public function actionStartJob(): Response
     {
         $this->requireCpRequest();
 
         $this->requirePermission('youtube-playlist-importer:playlist:update');
 
-        $playlist = PlaylistElement::findOne($elementId);
-
-        if ($playlist === null) {
-            throw new HttpException(404);
-        }
-
-        return $this->renderTemplate('youtube-playlist-importer/playlist/_form', [
-            'title' => $playlist->title,
-            'selectedSubnavItem' => 'playlists',
-            'fullPageForm' => true,
-            'playlist' => $playlist,
-            'elementId' => $elementId,
-            'site' => Craft::$app->getSites()->getCurrentSite(),
-        ]);
-    }
-
-    public function actionStartJob(int $playlistId): void
-    {
-        $this->requireCpRequest();
-
-        $this->requirePermission('youtube-playlist-importer:playlist:update');
-
+        $playlistId = Cast::mixedToInt($this->request->getParam('id'));
         $playlist = Craft::$app->getElements()->getElementById($playlistId, PlaylistElement::class);
 
         if (is_null($playlist)) {
             throw new HttpException(404);
         }
 
-//        YoutubePlaylistImporter::getInstance()->playlistImport->import($playlist);
-        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
+        $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Job scheduled.'));
+
+        return $this->redirectToPostedUrl($playlist);
     }
 
     /**
