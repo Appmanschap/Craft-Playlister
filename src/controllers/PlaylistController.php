@@ -6,8 +6,11 @@ use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
 use appmanschap\youtubeplaylistimporter\jobs\ImportPlaylistJob;
 use appmanschap\youtubeplaylistimporter\supports\Cast;
 use Craft;
+use craft\db\Query;
+use craft\db\Table;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
+use craft\queue\Queue;
 use craft\web\Controller;
 use Exception;
 use Throwable;
@@ -183,6 +186,8 @@ class PlaylistController extends Controller
             throw new HttpException(404);
         }
 
+        $this->releaseJobs($playlist);
+
         Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
 
         $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Job scheduled.'));
@@ -210,5 +215,31 @@ class PlaylistController extends Controller
         }
 
         return $crumbs;
+    }
+
+    /**
+     * @param PlaylistElement $playlist
+     * @return void
+     */
+    private function releaseJobs(PlaylistElement $playlist): void
+    {
+        $playlistId = $playlist->playlistId;
+        $playlistIdLength = strlen($playlistId);
+        $uniqueJobPayload = 's:10:"playlistId";s:' . $playlistIdLength . ':"' . $playlistId . '";';
+
+
+        (new Query())->from(Table::QUEUE)
+            ->where(['like', 'job', ImportPlaylistJob::class])
+            ->andWhere(['like', 'job', $uniqueJobPayload])
+            ->collect()
+            ->each(function($job) {
+                if (!is_array($job) || !isset($job['id'])) {
+                    return;
+                }
+
+                /** @var Queue $queue */
+                $queue = Craft::$app->getQueue();
+                $queue->release($job['id']);
+            });
     }
 }

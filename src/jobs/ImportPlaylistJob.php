@@ -17,11 +17,6 @@ class ImportPlaylistJob extends BaseJob
      */
     public PlaylistElement $playlist;
 
-    /**
-     * @var string|null
-     */
-    public ?string $description = 'Import Playlist items for Playlist';
-
     public function execute($queue): void
     {
         try {
@@ -43,6 +38,6 @@ class ImportPlaylistJob extends BaseJob
 
     protected function defaultDescription(): ?string
     {
-        return Craft::t('youtubeplaylistimporter', 'Importing playlist items for playlist: {title}.', ['title' => $this->playlist->name]);
+        return Craft::t('youtubeplaylistimporter', 'Import YouTube playlist: "{title}"', ['title' => $this->playlist->name]);
     }
 }
