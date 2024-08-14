@@ -41,14 +41,18 @@
   {% endif %}
 
   <div>
-    {{ forms.textField({
-      label: 'Youtube Playlist ID',
-      id: 'youtube-playlist-id',
-      name: 'playlistId',
-      value: playlist.playlistId,
-      required: true,
-      errors: playlist.getErrors('playlistId'),
-    }) }}
+
+    {% if playlist.id %}
+        {{ forms.textField({
+          label: 'Youtube Playlist ID',
+          id: 'youtube-playlist-id',
+          name: 'playlistId',
+          value: playlist.playlistId,
+          required: false,
+          readonly: true,
+          errors: playlist.getErrors('playlistId'),
+        }) }}
+    {% endif %}
 
     {{ forms.textField({
       label: 'Youtube Playlist URL',

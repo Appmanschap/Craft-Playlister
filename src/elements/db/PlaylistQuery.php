@@ -5,6 +5,7 @@ namespace appmanschap\youtubeplaylistimporter\elements\db;
 use craft\base\ElementInterface;
 use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
+use craft\helpers\Db;
 
 /**
  * @template TKey of array-key
@@ -13,6 +14,11 @@ use craft\elements\db\ElementQuery;
  */
 class PlaylistQuery extends ElementQuery
 {
+    /**
+     * @var string|null
+     */
+    public ?string $playlistId = null;
+
     /**
      * @return bool
      * @throws QueryAbortedException
@@ -25,9 +31,20 @@ class PlaylistQuery extends ElementQuery
             "{{%youtube_playlists}}.*",
         ]);
 
-        // todo: apply any custom query params
-        // ...
+        if ($this->playlistId) {
+            $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlists}}.playlistId', $this->playlistId) ?? []);
+        }
 
         return parent::beforePrepare();
+    }
+
+    /**
+     * @param string $playlistId
+     * @return $this
+     */
+    public function playlistId(string $playlistId): static
+    {
+        $this->playlistId = $playlistId;
+        return $this;
     }
 }

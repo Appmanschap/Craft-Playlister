@@ -47,6 +47,11 @@ class Playlist extends Element
      */
     public int $limit = 50;
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
     public static function displayName(): string
     {
         return Craft::t('youtube-playlist-importer', 'Playlist');
@@ -143,8 +148,6 @@ class Playlist extends Element
     {
         return [
             'title' => Craft::t('app', 'Title'),
-            'slug' => Craft::t('app', 'Slug'),
-            'uri' => Craft::t('app', 'URI'),
             [
                 'label' => Craft::t('app', 'Date Created'),
                 'orderBy' => 'elements.dateCreated',
@@ -172,12 +175,8 @@ class Playlist extends Element
     protected static function defineTableAttributes(): array
     {
         return [
-            'slug' => ['label' => Craft::t('app', 'Slug')],
-            'uri' => ['label' => Craft::t('app', 'URI')],
-            'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
-            'uid' => ['label' => Craft::t('app', 'UID')],
-            'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
+            'playlistId' => ['label' => Craft::t('youtubeplaylistimporter', 'YouTube Playlist ID')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
             // ...
         ];
@@ -190,8 +189,8 @@ class Playlist extends Element
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
-            'dateCreated',
+            'playlistId',
+            'dateUpdated',
             // ...
         ];
     }
@@ -232,21 +231,6 @@ class Playlist extends Element
             ];
         }
         return $previewTargets;
-    }
-
-    /**
-     * @return array<string|int, string|array<string, string|array<string, mixed>>>|string|null
-     */
-    protected function route(): array|string|null
-    {
-        // Define how playlists should be routed when their URLs are requested
-        return [
-            'templates/render',
-            [
-                'template' => 'site/template/path',
-                'variables' => ['playlist' => $this],
-            ],
-        ];
     }
 
     public function canView(User $user): bool

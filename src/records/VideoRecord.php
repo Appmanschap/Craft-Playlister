@@ -21,7 +21,7 @@ use yii\db\ActiveQueryInterface;
  * @property string $playlistId
  * @property string $channelId
  * @property string $channelTitle
- * @property string $defaultAudioLanguage
+ * @property string|null $defaultAudioLanguage
  * @property string|null $defaultLanguage
  * @property bool $embeddable
  * @property string $tags

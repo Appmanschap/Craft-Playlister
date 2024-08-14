@@ -29,7 +29,7 @@ class Video extends Element
     public string $playlistId = '';
     public string $channelId = '';
     public string $channelTitle = '';
-    public string $defaultAudioLanguage = 'en';
+    public ?string $defaultAudioLanguage = 'en';
     public ?string $defaultLanguage = 'en';
     public bool $embeddable = false;
     public string $tags = '';
@@ -96,16 +96,33 @@ class Video extends Element
 
     /**
      * @param  string  $context
-     * @return array<int, array<string, string>>
+     * @return array<array-key, array<array-key, string|array<array-key, string|int|null>>>
      */
     protected static function defineSources(string $context): array
     {
-        return [
+        $sources = [
             [
                 'key' => '*',
                 'label' => Craft::t('youtube-playlist-importer', 'All videos'),
             ],
         ];
+
+        /** @var Playlist[] $playlists */
+        $playlists = Playlist::find()->all();
+
+        array_map(function(Playlist $playlist) use (&$sources) {
+            $sources["playlist:{$playlist->id}"] = [
+                'key' => "playlist:{$playlist->id}",
+                'label' => $playlist->name,
+                'data' => [
+                    'handle' => Playlist::refHandle(),
+                ],
+                'criteria' => ['playlistId' => $playlist->playlistId],
+                'defaultSort' => ['youtube_playlist_videos.pushed_at' => SORT_DESC],
+            ];
+        }, $playlists);
+
+        return $sources;
     }
 
     /**
@@ -130,8 +147,6 @@ class Video extends Element
     {
         return [
             'title' => Craft::t('app', 'Title'),
-            'slug' => Craft::t('app', 'Slug'),
-            'uri' => Craft::t('app', 'URI'),
             [
                 'label' => Craft::t('app', 'Date Created'),
                 'orderBy' => 'elements.dateCreated',
@@ -142,6 +157,24 @@ class Video extends Element
                 'label' => Craft::t('app', 'Date Updated'),
                 'orderBy' => 'elements.dateUpdated',
                 'attribute' => 'dateUpdated',
+                'defaultDir' => 'desc',
+            ],
+            [
+                'label' => Craft::t('app', 'YouTube Video ID'),
+                'orderBy' => 'videoId',
+                'attribute' => 'videoId',
+                'defaultDir' => 'asc',
+            ],
+            [
+                'label' => Craft::t('app', 'Published at'),
+                'orderBy' => 'datePublished',
+                'attribute' => 'datePublished',
+                'defaultDir' => 'desc',
+            ],
+            [
+                'label' => Craft::t('app', 'Embeddable'),
+                'orderBy' => 'embeddable',
+                'attribute' => 'embeddable',
                 'defaultDir' => 'desc',
             ],
             [
@@ -159,11 +192,11 @@ class Video extends Element
     protected static function defineTableAttributes(): array
     {
         return [
-            'slug' => ['label' => Craft::t('app', 'Slug')],
-            'uri' => ['label' => Craft::t('app', 'URI')],
-            'link' => ['label' => Craft::t('app', 'Link'), 'icon' => 'world'],
             'id' => ['label' => Craft::t('app', 'ID')],
+            'videoId' => ['label' => Craft::t('youtubeplaylistimporter', 'YouTube Video ID')],
+            'embeddable' => ['label' => Craft::t('youtubeplaylistimporter', 'Embeddable')],
             'uid' => ['label' => Craft::t('app', 'UID')],
+            'datePublished' => ['label' => Craft::t('app', 'Published at')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
             // ...
@@ -177,7 +210,9 @@ class Video extends Element
     protected static function defineDefaultTableAttributes(string $source): array
     {
         return [
-            'link',
+            'videoId',
+            'embeddable',
+            'datePublished',
             'dateCreated',
             // ...
         ];
