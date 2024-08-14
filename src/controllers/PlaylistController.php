@@ -3,6 +3,7 @@
 namespace appmanschap\youtubeplaylistimporter\controllers;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
+use appmanschap\youtubeplaylistimporter\jobs\ImportPlaylistJob;
 use appmanschap\youtubeplaylistimporter\supports\Cast;
 use Craft;
 use craft\errors\SiteNotFoundException;
@@ -181,6 +182,8 @@ class PlaylistController extends Controller
         if (is_null($playlist)) {
             throw new HttpException(404);
         }
+
+        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
 
         $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Job scheduled.'));
 
