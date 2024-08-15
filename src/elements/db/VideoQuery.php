@@ -20,6 +20,11 @@ class VideoQuery extends ElementQuery
     public ?string $playlistId = null;
 
     /**
+     * @var array<string-key, string>
+     */
+    public array $tags = [];
+
+    /**
      * @return bool
      * @throws QueryAbortedException
      */
@@ -35,6 +40,10 @@ class VideoQuery extends ElementQuery
             $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $this->playlistId) ?? []);
         }
 
+        if ($this->tags) {
+            array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $tag, 'like') ?? []), $this->tags);
+        }
+
         return parent::beforePrepare();
     }
 
@@ -45,6 +54,16 @@ class VideoQuery extends ElementQuery
     public function playlistId(string $playlistId): static
     {
         $this->playlistId = $playlistId;
+        return $this;
+    }
+
+    /**
+     * @param array<array-key, string> $tags
+     * @return $this
+     */
+    public function tags(array $tags): static
+    {
+        $this->tags = $tags;
         return $this;
     }
 }

@@ -25,6 +25,6 @@ class YoutubePlaylistImporter
      */
     public function videos(array $tags = []): VideoQuery
     {
-        return Video::find();
+        return Video::find()->tags($tags);
     }
 }
