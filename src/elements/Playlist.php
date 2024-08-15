@@ -8,7 +8,6 @@ use appmanschap\youtubeplaylistimporter\records\PlaylistRecord;
 use Craft;
 use craft\base\Element;
 use craft\elements\conditions\ElementConditionInterface;
-use craft\elements\db\ElementQueryInterface;
 use craft\elements\ElementCollection;
 use craft\elements\User;
 use craft\helpers\UrlHelper;
@@ -109,7 +108,11 @@ class Playlist extends Element
         return true;
     }
 
-    public static function find(): ElementQueryInterface
+    /**
+     * @return PlaylistQuery<array-key, Playlist>
+     * @throws InvalidConfigException
+     */
+    public static function find(): PlaylistQuery
     {
         return Craft::createObject(PlaylistQuery::class, [static::class]);
     }

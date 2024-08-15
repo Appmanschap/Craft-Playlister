@@ -1,17 +1,17 @@
 <?php
+
 namespace appmanschap\youtubeplaylistimporter\variables;
 
 use appmanschap\youtubeplaylistimporter\elements\db\PlaylistQuery;
 use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use appmanschap\youtubeplaylistimporter\elements\Video;
-use craft\elements\db\ElementQueryInterface;
 use yii\base\InvalidConfigException;
 
 class YoutubePlaylistImporter
 {
     /**
-     * @return PlaylistQuery|ElementQueryInterface
+     * @return PlaylistQuery<array-key, Playlist>
      */
     public function playlists(): PlaylistQuery
     {
@@ -19,8 +19,8 @@ class YoutubePlaylistImporter
     }
 
     /**
-     * @param array $tags
-     * @return VideoQuery
+     * @param array<array-key, string> $tags
+     * @return VideoQuery<array-key, Video>
      * @throws InvalidConfigException
      */
     public function videos(array $tags = []): VideoQuery
