@@ -77,6 +77,10 @@ class YoutubePlaylistImporter extends Plugin
                 $this->_registerCpRoutes();
                 $this->_registerCpPermissions();
             }
+
+            if (Craft::$app->getRequest()->getIsSiteRequest()) {
+                $this->_registerVariables();
+            }
         });
     }
 

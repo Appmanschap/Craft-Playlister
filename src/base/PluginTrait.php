@@ -5,6 +5,7 @@ namespace appmanschap\youtubeplaylistimporter\base;
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use appmanschap\youtubeplaylistimporter\elements\Video;
 use appmanschap\youtubeplaylistimporter\fields\Playlists;
+use appmanschap\youtubeplaylistimporter\variables\YoutubePlaylistImporter as YoutubePlaylistImportVariable;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
@@ -106,7 +107,7 @@ trait PluginTrait
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function(Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
-//            $variable->set('camelCaseCustom', Custom::class);
+            $variable->set('ypi', YoutubePlaylistImportVariable::class);
         });
     }
 }
