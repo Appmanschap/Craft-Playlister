@@ -4,6 +4,7 @@ namespace appmanschap\youtubeplaylistimporter\base;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use appmanschap\youtubeplaylistimporter\elements\Video;
+use appmanschap\youtubeplaylistimporter\fields\Playlists;
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
@@ -93,7 +94,7 @@ trait PluginTrait
     public function _registerFieldTypes(): void
     {
         Event::on(Fields::class, Fields::EVENT_REGISTER_FIELD_TYPES, function(RegisterComponentTypesEvent $event) {
-//            $event->types[] = Custom::class;
+            $event->types[] = Playlists::class;
         });
     }
 

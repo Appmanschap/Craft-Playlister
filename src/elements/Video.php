@@ -8,7 +8,6 @@ use appmanschap\youtubeplaylistimporter\records\VideoRecord;
 use Craft;
 use craft\base\Element;
 use craft\elements\conditions\ElementConditionInterface;
-use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
@@ -84,7 +83,11 @@ class Video extends Element
         return true;
     }
 
-    public static function find(): ElementQueryInterface
+    /**
+     * @return VideoQuery<array-key, Video>
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function find(): VideoQuery
     {
         return Craft::createObject(VideoQuery::class, [static::class]);
     }

@@ -2,14 +2,16 @@
 
 namespace appmanschap\youtubeplaylistimporter\elements\db;
 
-use craft\base\ElementInterface;
+use appmanschap\youtubeplaylistimporter\collections\PlaylistCollection;
+use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use yii\db\Connection as YiiConnection;
 
 /**
  * @template TKey of array-key
- * @template TElement of ElementInterface
+ * @template TElement of Playlist
  * @extends ElementQuery<TKey, TElement>
  */
 class PlaylistQuery extends ElementQuery
@@ -46,5 +48,19 @@ class PlaylistQuery extends ElementQuery
     {
         $this->playlistId = $playlistId;
         return $this;
+    }
+
+    /**
+     * @param YiiConnection|null $db
+     * @return PlaylistCollection<array-key, Playlist>
+     */
+    public function collect(?YiiConnection $db = null): PlaylistCollection
+    {
+        // NOTE: For now we can make an own collection by retrieving the items from ElementCollection.
+        //          Adjust this when it's possible to use a custom ElementCollection in Craft.
+        $collection = parent::collect($db);
+        /** @var PlaylistCollection<array-key, Playlist> $playlistCollection */
+        $playlistCollection = PlaylistCollection::make($collection->all());
+        return $playlistCollection;
     }
 }

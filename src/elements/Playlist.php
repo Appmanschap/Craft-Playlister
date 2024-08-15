@@ -9,10 +9,12 @@ use Craft;
 use craft\base\Element;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\ElementCollection;
 use craft\elements\User;
 use craft\helpers\UrlHelper;
 use craft\web\CpScreenResponseBehavior;
 use Throwable;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\web\Response;
@@ -47,6 +49,11 @@ class Playlist extends Element
      */
     public int $limit = 50;
 
+    /**
+     * @var ElementCollection<array-key, Video>|null
+     */
+    private ?ElementCollection $_videos = null;
+    
     public function __toString(): string
     {
         return $this->name;
@@ -336,5 +343,20 @@ class Playlist extends Element
         }
 
         parent::afterDelete();
+    }
+
+    /**
+     * @return ElementCollection<array-key, Video>|null
+     * @throws InvalidConfigException
+     */
+    public function getVideos(): ?ElementCollection
+    {
+        if (!$this->_videos && $this->playlistId) {
+            /** @var ElementCollection<array-key, Video> $videos */
+            $videos = Video::find()->playlistId($this->playlistId)->collect();
+            $this->_videos = $videos;
+        }
+
+        return $this->_videos;
     }
 }
