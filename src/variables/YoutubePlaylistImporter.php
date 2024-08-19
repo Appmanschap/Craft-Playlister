@@ -12,8 +12,8 @@ use yii\base\InvalidConfigException;
 class YoutubePlaylistImporter
 {
     /**
-     * @param array $criteria
-     * @return PlaylistQuery
+     * @param array<array-key, string> $criteria
+     * @return PlaylistQuery<array-key, Playlist>
      * @throws InvalidConfigException
      */
     public function playlists(array $criteria = []): PlaylistQuery
@@ -27,8 +27,8 @@ class YoutubePlaylistImporter
     }
 
     /**
-     * @param array $criteria
-     * @return VideoQuery
+     * @param array<array-key, string> $criteria
+     * @return VideoQuery<array-key, Video>
      * @throws InvalidConfigException
      */
     public function videos(array $criteria = []): VideoQuery
