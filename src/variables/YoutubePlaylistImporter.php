@@ -19,7 +19,7 @@ class YoutubePlaylistImporter
      */
     public function playlists(array $criteria = []): PlaylistQuery
     {
-        $query =  Playlist::find();
+        $query = Playlist::find();
         if ($criteria) {
             Craft::configure($query, $criteria);
         }
