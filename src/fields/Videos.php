@@ -11,7 +11,7 @@ use craft\elements\ElementCollection;
 use craft\fields\BaseRelationField;
 
 /**
- * Playlists field type
+ * Videos field type
  */
 class Videos extends BaseRelationField
 {
