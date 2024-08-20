@@ -2,7 +2,6 @@
 
 namespace appmanschap\youtubeplaylistimporter\fields;
 
-use appmanschap\youtubeplaylistimporter\elements\db\PlaylistQuery;
 use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
 use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
 use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
