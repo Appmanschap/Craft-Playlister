@@ -67,10 +67,10 @@ class VideoQuery extends ElementQuery
     }
 
     /**
-     * @param bool $embeddable
+     * @param bool|null $embeddable
      * @return $this
      */
-    public function embeddable(bool $embeddable): static
+    public function embeddable(?bool $embeddable): static
     {
         $this->embeddable = $embeddable;
         return $this;
