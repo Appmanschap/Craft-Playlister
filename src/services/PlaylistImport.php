@@ -177,7 +177,7 @@ class PlaylistImport extends Component
             $video->defaultAudioLanguage = $youtubeVideoSnippet->getDefaultAudioLanguage();
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
-            $video->tags = implode(', ', $youtubeVideoSnippet->getTags());
+            $video->tags = implode(', ', $youtubeVideoSnippet->getTags() ?? []);
 
             try {
                 Craft::$app->getElements()->saveElement($video);
