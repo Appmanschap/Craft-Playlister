@@ -167,6 +167,8 @@ class PlaylistImport extends Component
                 $video = new VideoElement();
             }
 
+            $tags = empty($youtubeVideoSnippet->getTags()) ? [] : $youtubeVideoSnippet->getTags();
+
             $video->videoId = $videoId;
             $video->title = $youtubeVideoSnippet->getTitle();
             $video->description = $youtubeVideoSnippet->getDescription();
@@ -177,7 +179,7 @@ class PlaylistImport extends Component
             $video->defaultAudioLanguage = $youtubeVideoSnippet->getDefaultAudioLanguage();
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
-            $video->tags = implode(', ', $youtubeVideoSnippet->getTags() ?? []);
+            $video->tags = implode(', ', $tags);
 
             try {
                 Craft::$app->getElements()->saveElement($video);
