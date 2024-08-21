@@ -349,14 +349,15 @@ class Playlist extends Element
     }
 
     /**
+     * @param bool|null $embeddable
      * @return ElementCollection<array-key, Video>|null
      * @throws InvalidConfigException
      */
-    public function getVideos(): ?ElementCollection
+    public function getVideos(?bool $embeddable = null): ?ElementCollection
     {
         if (!$this->_videos && $this->playlistId) {
             /** @var ElementCollection<array-key, Video> $videos */
-            $videos = Video::find()->playlistId($this->playlistId)->collect();
+            $videos = Video::find()->playlistId($this->playlistId)->embeddable($embeddable)->collect();
             $this->_videos = $videos;
         }
 
