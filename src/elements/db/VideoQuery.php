@@ -20,6 +20,11 @@ class VideoQuery extends ElementQuery
     public ?string $playlistId = null;
 
     /**
+     * @var bool|null
+     */
+    public ?bool $embeddable = null;
+
+    /**
      * @var array<string-key, string>
      */
     public array $tags = [];
@@ -40,6 +45,10 @@ class VideoQuery extends ElementQuery
             $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $this->playlistId) ?? []);
         }
 
+        if (!is_null($this->embeddable)) {
+            $this->subQuery?->andWhere(Db::parseBooleanParam('{{%youtube_playlist_videos}}.embeddable', $this->embeddable));
+        }
+
         if ($this->tags) {
             array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $tag, 'like') ?? []), $this->tags);
         }
@@ -54,6 +63,16 @@ class VideoQuery extends ElementQuery
     public function playlistId(string $playlistId): static
     {
         $this->playlistId = $playlistId;
+        return $this;
+    }
+
+    /**
+     * @param bool $embeddable
+     * @return $this
+     */
+    public function embeddable(bool $embeddable): static
+    {
+        $this->embeddable = $embeddable;
         return $this;
     }
 
