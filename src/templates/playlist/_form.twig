@@ -1,4 +1,4 @@
-{% extends '_layouts/cp' %}
+{#{% extends '_layouts/cp' %}#}
 
 {% import "_includes/forms" as forms %}
 
@@ -17,32 +17,22 @@
   }
 ] %}
 
-{% block header %}
-  {{ block('pageTitle') }}
+{#{% block header %}#}
+{#  {{ block('pageTitle') }}#}
 
-  <div class="flex-grow"></div>
-  <div class="flex-grow"></div>
+{#  <div class="flex-grow"></div>#}
+{#  <div class="flex-grow"></div>#}
 
-  <a class="formsubmit btn" data-action="{{ 'youtube-playlist-importer/playlist/start-job' }}" data-redirect="{{ '{cpEditUrl}' |hash }}">Run job</a>
+{#  <a class="formsubmit btn" data-action="{{ 'youtube-playlist-importer/playlist/start-job' }}" data-redirect="{{ '{cpEditUrl}' |hash }}">Run job</a>#}
 
-  {{ block('actionButton') }}
-{% endblock %}
+{#  {{ block('actionButton') }}#}
+{#{% endblock %}#}
 
 {% block content %}
   {{ actionInput('youtube-playlist-importer/playlist/save') }}
-  {{ redirectInput('youtube-playlist/playlists/{id}') }}
-
-  {% if playlist.id %}
-    {{ forms.hidden({
-      id: 'youtube-playlist-id',
-      name: 'id',
-      value: playlist.id ?? null
-    }) }}
-  {% endif %}
 
   <div>
-
-    {% if playlist.id %}
+    {% if playlist.playlistId %}
         {{ forms.textField({
           label: 'Youtube Playlist ID',
           id: 'youtube-playlist-id',
@@ -50,6 +40,7 @@
           value: playlist.playlistId,
           required: false,
           readonly: true,
+          disabled: true,
           errors: playlist.getErrors('playlistId'),
         }) }}
     {% endif %}

@@ -73,6 +73,7 @@ class YoutubePlaylistImporter extends Plugin
                 $this->_registerTemplateRoots();
                 $this->_registerElementTypes();
                 $this->_registerFieldTypes();
+                $this->_registerEditorContents();
                 $this->_registerNavItems();
                 $this->_registerCpRoutes();
                 $this->_registerCpPermissions();
