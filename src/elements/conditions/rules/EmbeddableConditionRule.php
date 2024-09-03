@@ -1,9 +1,9 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements\conditions\rules;
+namespace appmanschap\craftplaylister\elements\conditions\rules;
 
-use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
-use appmanschap\youtubeplaylistimporter\elements\Video;
+use appmanschap\craftplaylister\elements\db\VideoQuery;
+use appmanschap\craftplaylister\elements\Video;
 use Craft;
 use craft\base\conditions\BaseLightswitchConditionRule;
 use craft\base\ElementInterface;
@@ -18,7 +18,7 @@ class EmbeddableConditionRule extends BaseLightswitchConditionRule implements El
 {
     public function getLabel(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Embeddable');
+        return Craft::t('craftplaylister', 'Embeddable');
     }
 
     public function getExclusiveQueryParams(): array

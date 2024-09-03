@@ -1,11 +1,11 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\variables;
+namespace appmanschap\craftplaylister\variables;
 
-use appmanschap\youtubeplaylistimporter\elements\db\PlaylistQuery;
-use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
-use appmanschap\youtubeplaylistimporter\elements\Playlist;
-use appmanschap\youtubeplaylistimporter\elements\Video;
+use appmanschap\craftplaylister\elements\db\PlaylistQuery;
+use appmanschap\craftplaylister\elements\db\VideoQuery;
+use appmanschap\craftplaylister\elements\Playlist;
+use appmanschap\craftplaylister\elements\Video;
 use Craft;
 use yii\base\InvalidConfigException;
 
@@ -13,7 +13,7 @@ use yii\base\InvalidConfigException;
  * @link      https://www.appmanschap.nl
  * @copyright Copyright (c) 2024 Appmanschap
  */
-class YoutubePlaylistImporter
+class Playlister
 {
     /**
      * @param array<array-key, string> $criteria

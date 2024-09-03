@@ -1,11 +1,11 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter;
+namespace appmanschap\craftplaylister;
 
-use appmanschap\youtubeplaylistimporter\base\PluginTrait;
-use appmanschap\youtubeplaylistimporter\base\Routes;
-use appmanschap\youtubeplaylistimporter\models\Settings;
-use appmanschap\youtubeplaylistimporter\services\PlaylistImport;
+use appmanschap\craftplaylister\base\PluginTrait;
+use appmanschap\craftplaylister\base\Routes;
+use appmanschap\craftplaylister\models\Settings;
+use appmanschap\craftplaylister\services\PlaylistImport;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
@@ -21,24 +21,24 @@ use yii\base\InvalidRouteException;
  * @link      https://www.appmanschap.nl
  * @copyright Copyright (c) 2024 Appmanschap
  *
- * Youtube Playlist Importer plugin
+ * Playlister plugin
  *
- * @method static YoutubePlaylistImporter getInstance()
+ * @method static Playlister getInstance()
  * @method Settings getSettings()
  * @author Appmanschap <info@appmanschap.nl>
  * @copyright Appmanschap
  * @license https://craftcms.github.io/license/ Craft License
  * @property-read PlaylistImport $playlistImport
  */
-class YoutubePlaylistImporter extends Plugin
+class Playlister extends Plugin
 {
     use PluginTrait;
     use Routes;
 
     /**
-     * @var YoutubePlaylistImporter|null
+     * @var Playlister|null
      */
-    public static ?YoutubePlaylistImporter $plugin;
+    public static ?Playlister $plugin;
 
     /**
      * @var string
@@ -114,7 +114,7 @@ class YoutubePlaylistImporter extends Plugin
         }
 
         // Just redirect to the plugin settings page
-        return $response->redirect(UrlHelper::cpUrl('youtube-playlist/settings'));
+        return $response->redirect(UrlHelper::cpUrl('playlister/settings'));
     }
 
     /**
@@ -126,7 +126,7 @@ class YoutubePlaylistImporter extends Plugin
      */
     protected function settingsHtml(): ?string
     {
-        return Craft::$app->view->renderTemplate('youtube-playlist-importer/_settings.twig', [
+        return Craft::$app->view->renderTemplate('craft-playlister/_settings.twig', [
             'plugin' => $this,
             'settings' => $this->getSettings(),
         ]);

@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\records;
+namespace appmanschap\craftplaylister\records;
 
-use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
+use appmanschap\craftplaylister\elements\Video as VideoElement;
 use craft\db\ActiveRecord;
 use craft\db\SoftDeleteTrait;
 use craft\records\Element;
@@ -37,7 +37,7 @@ class VideoRecord extends ActiveRecord
 
     public static function tableName()
     {
-        return '{{%youtube_playlist_videos}}';
+        return '{{%playlister_videos}}';
     }
 
     /**

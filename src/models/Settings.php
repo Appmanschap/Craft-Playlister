@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\models;
+namespace appmanschap\craftplaylister\models;
 
 use craft\base\Model;
 
@@ -8,7 +8,7 @@ use craft\base\Model;
  * @link      https://www.appmanschap.nl
  * @copyright Copyright (c) 2024 Appmanschap
  *
- * Youtube Playlist Importer settings
+ * Playlister settings
  */
 class Settings extends Model
 {

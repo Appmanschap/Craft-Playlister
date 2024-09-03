@@ -1,9 +1,9 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\collections;
+namespace appmanschap\craftplaylister\collections;
 
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\elements\Video as VideoElement;
 use craft\base\ElementInterface;
 use craft\elements\ElementCollection;
 use Illuminate\Support\Collection;

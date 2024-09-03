@@ -1,9 +1,9 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements\db;
+namespace appmanschap\craftplaylister\elements\db;
 
-use appmanschap\youtubeplaylistimporter\collections\PlaylistCollection;
-use appmanschap\youtubeplaylistimporter\elements\Playlist;
+use appmanschap\craftplaylister\collections\PlaylistCollection;
+use appmanschap\craftplaylister\elements\Playlist;
 use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
@@ -30,14 +30,14 @@ class PlaylistQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable("{{%youtube_playlists}}");
+        $this->joinElementTable("{{%playlister_playlists}}");
 
         $this->query?->select([
-            "{{%youtube_playlists}}.*",
+            "{{%playlister_playlists}}.*",
         ]);
 
         if ($this->playlistId) {
-            $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlists}}.playlistId', $this->playlistId) ?? []);
+            $this->subQuery?->andWhere(Db::parseParam('{{%playlister_playlists}}.playlistId', $this->playlistId) ?? []);
         }
 
         return parent::beforePrepare();

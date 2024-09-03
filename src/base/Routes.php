@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\base;
+namespace appmanschap\craftplaylister\base;
 
 use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -23,16 +23,16 @@ trait Routes
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             static function(RegisterUrlRulesEvent $event) {
-                $event->rules['youtube-playlist'] = 'youtube-playlist-importer/playlist/index';
-                $event->rules['youtube-playlist/playlists'] = 'youtube-playlist-importer/playlist/index';
-                $event->rules['youtube-playlist/playlists/new'] = 'youtube-playlist-importer/playlist/edit';
-                $event->rules['youtube-playlist/playlists/<elementId:\\d+>'] = 'youtube-playlist-importer/playlist/edit';
-                $event->rules['youtube-playlist/playlists/start-job/<playlistId:\\d+>'] = 'youtube-playlist-importer/playlist/start-job';
+                $event->rules['playlister'] = 'craft-playlister/playlist/index';
+                $event->rules['playlister/playlists'] = 'craft-playlister/playlist/index';
+                $event->rules['playlister/playlists/new'] = 'craft-playlister/playlist/edit';
+                $event->rules['playlister/playlists/<elementId:\\d+>'] = 'craft-playlister/playlist/edit';
+                $event->rules['playlister/playlists/start-job/<playlistId:\\d+>'] = 'craft-playlister/playlist/start-job';
 
-                $event->rules['youtube-playlist/settings'] = 'youtube-playlist-importer/settings/plugin';
+                $event->rules['playlister/settings'] = 'craft-playlister/settings/plugin';
 
-                $event->rules['youtube-playlist/videos'] = 'youtube-playlist-importer/video/index';
-                $event->rules['youtube-playlist/videos/<elementId:\\d+>'] = 'youtube-playlist-importer/video/edit';
+                $event->rules['playlister/videos'] = 'craft-playlister/video/index';
+                $event->rules['playlister/videos/<elementId:\\d+>'] = 'craft-playlister/video/edit';
             }
         );
     }
@@ -44,20 +44,20 @@ trait Routes
     {
         Event::on(Cp::class, Cp::EVENT_REGISTER_CP_NAV_ITEMS, function(RegisterCpNavItemsEvent $event) {
             $event->navItems[] = [
-                'url' => 'youtube-playlist',
-                'label' => 'Youtube Playlists',
+                'url' => 'playlister',
+                'label' => 'Playlists',
                 'icon' => $this->getBasePath() . DIRECTORY_SEPARATOR . 'icon.svg',
                 'subnav' => [
                     'playlists' => [
-                        'url' => 'youtube-playlist/playlists',
+                        'url' => 'playlister/playlists',
                         'label' => 'Playlist',
                     ],
                     'videos' => [
-                        'url' => 'youtube-playlist/videos',
+                        'url' => 'playlister/videos',
                         'label' => 'Video',
                     ],
                     'settings' => [
-                        'url' => 'youtube-playlist/settings',
+                        'url' => 'playlister/settings',
                         'label' => 'Settings',
                     ],
                 ],

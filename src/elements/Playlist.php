@@ -1,13 +1,14 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements;
+namespace appmanschap\craftplaylister\elements;
 
-use appmanschap\youtubeplaylistimporter\elements\conditions\PlaylistCondition;
-use appmanschap\youtubeplaylistimporter\elements\db\PlaylistQuery;
-use appmanschap\youtubeplaylistimporter\records\PlaylistRecord;
-use appmanschap\youtubeplaylistimporter\supports\Cast;
+use appmanschap\craftplaylister\elements\conditions\PlaylistCondition;
+use appmanschap\craftplaylister\elements\db\PlaylistQuery;
+use appmanschap\craftplaylister\records\PlaylistRecord;
+use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\base\Element;
+use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\ElementCollection;
 use craft\elements\User;
@@ -65,22 +66,22 @@ class Playlist extends Element
 
     public static function displayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Playlist');
+        return Craft::t('craftplaylister', 'Playlist');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'playlist');
+        return Craft::t('craftplaylister', 'playlist');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Playlists');
+        return Craft::t('craftplaylister', 'Playlists');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'playlists');
+        return Craft::t('craftplaylister', 'playlists');
     }
 
     public static function refHandle(): ?string
@@ -136,19 +137,21 @@ class Playlist extends Element
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('youtube-playlist-importer', 'All playlists'),
+                'label' => Craft::t('craftplaylister', 'All playlists'),
             ],
         ];
     }
 
     /**
      * @param  string  $source
-     * @return array<int, array<string, string>>
+     * @return array<int, string>
      */
     protected static function defineActions(string $source): array
     {
         // List any bulk element actions here
-        return [];
+        return [
+            Restore::class,
+        ];
     }
 
     protected static function includeSetStatusAction(): bool
@@ -191,7 +194,7 @@ class Playlist extends Element
     {
         return [
             'id' => ['label' => Craft::t('app', 'ID')],
-            'playlistId' => ['label' => Craft::t('youtubeplaylistimporter', 'YouTube Playlist ID')],
+            'playlistId' => ['label' => Craft::t('craftplaylister', 'YouTube Playlist ID')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
             // ...
         ];
@@ -254,7 +257,7 @@ class Playlist extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:playlist');
+        return $user->can('playlister:playlist');
     }
 
     public function canSave(User $user): bool
@@ -263,7 +266,7 @@ class Playlist extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:playlist:update');
+        return $user->can('playlister:playlist:update');
     }
 
     public function canDuplicate(User $user): bool
@@ -272,7 +275,7 @@ class Playlist extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:playlist:update');
+        return $user->can('playlister:playlist:update');
     }
 
     public function canDelete(User $user): bool
@@ -281,7 +284,7 @@ class Playlist extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:playlist:delete');
+        return $user->can('playlister:playlist:delete');
     }
 
     public static function hasDrafts(): bool
@@ -296,12 +299,16 @@ class Playlist extends Element
 
     protected function cpEditUrl(): string
     {
-        return sprintf('youtube-playlist/playlists/%s', $this->getCanonicalId());
+        if ($this->trashed) {
+            return '';
+        }
+
+        return sprintf('playlister/playlists/%s', $this->getCanonicalId());
     }
 
     public function getPostEditUrl(): ?string
     {
-        return UrlHelper::cpUrl($this->cpEditUrl());
+        return UrlHelper::cpUrl('playlister/playlists');
     }
 
     public function getFieldLayout(): ?FieldLayout
@@ -371,13 +378,20 @@ class Playlist extends Element
 
         if ($this->hardDelete) {
             $record->delete();
-        } else {
-            if (method_exists($record, 'softDelete')) {
-                $record->softDelete();
-            }
         }
 
+        $this->getVideos()?->each(function(Video $video) {
+            Craft::$app->elements->deleteElement($video, $this->hardDelete);
+        });
+
         parent::afterDelete();
+    }
+
+    public function afterRestore(): void
+    {
+        Craft::$app->elements->restoreElements(Video::find()->playlistId($this->playlistId)->trashed()->all());
+
+        parent::afterRestore();
     }
 
     /**

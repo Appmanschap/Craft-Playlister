@@ -1,13 +1,13 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\base;
+namespace appmanschap\craftplaylister\base;
 
-use appmanschap\youtubeplaylistimporter\controllers\PlaylistController;
-use appmanschap\youtubeplaylistimporter\elements\Playlist;
-use appmanschap\youtubeplaylistimporter\elements\Video;
-use appmanschap\youtubeplaylistimporter\fields\Playlists;
-use appmanschap\youtubeplaylistimporter\fields\Videos;
-use appmanschap\youtubeplaylistimporter\variables\YoutubePlaylistImporter as YoutubePlaylistImportVariable;
+use appmanschap\craftplaylister\controllers\PlaylistController;
+use appmanschap\craftplaylister\elements\Playlist;
+use appmanschap\craftplaylister\elements\Video;
+use appmanschap\craftplaylister\fields\Playlists;
+use appmanschap\craftplaylister\fields\Videos;
+use appmanschap\craftplaylister\variables\Playlister as PlaylisterVariable;
 use Craft;
 use craft\controllers\ElementsController;
 use craft\events\DefineElementEditorHtmlEvent;
@@ -33,7 +33,7 @@ trait PluginTrait
      */
     public function _registerI18nTranslations(): void
     {
-        Craft::$app->i18n->translations['youtubeplaylistimporter'] = [
+        Craft::$app->i18n->translations['craftplaylister'] = [
             'class' => PhpMessageSource::class,
             'sourceLanguage' => 'en',
             'basePath' => $this->getBasePath() . DIRECTORY_SEPARATOR . 'translations/',
@@ -57,7 +57,7 @@ trait PluginTrait
     public function _registerEditorContents(): void
     {
         Event::on(PlaylistController::class, ElementsController::EVENT_DEFINE_EDITOR_CONTENT, function(DefineElementEditorHtmlEvent $event) {
-            $event->html = Craft::$app->getView()->renderTemplate('youtube-playlist-importer/playlist/_form', [
+            $event->html = Craft::$app->getView()->renderTemplate('craft-playlister/playlist/_form', [
                 'title' => $event->element->title,
                 'playlist' => $event->element,
             ]);
@@ -71,24 +71,24 @@ trait PluginTrait
     {
         Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
             $event->permissions[] = [
-                'heading' => Craft::t('youtubeplaylistimporter', 'YouTube Playlist Importer'),
+                'heading' => Craft::t('craftplaylister', 'Playlister'),
                 'permissions' => [
-                    'youtube-playlist-importer:playlist' => [
-                        'label' => Craft::t('youtubeplaylistimporter', 'View playlists'),
+                    'playlister:playlist' => [
+                        'label' => Craft::t('craftplaylister', 'View playlists'),
                         'nested' => [
-                            'youtube-playlist-importer:playlist:create' => [
-                                'label' => Craft::t('youtubeplaylistimporter', 'Create playlists'),
+                            'playlister:playlist:create' => [
+                                'label' => Craft::t('craftplaylister', 'Create playlists'),
                             ],
-                            'youtube-playlist-importer:playlist:update' => [
-                                'label' => Craft::t('youtubeplaylistimporter', 'Manage playlists'),
+                            'playlister:playlist:update' => [
+                                'label' => Craft::t('craftplaylister', 'Manage playlists'),
                             ],
-                            'youtube-playlist-importer:playlist:delete' => [
-                                'label' => Craft::t('youtubeplaylistimporter', 'Delete playlists'),
+                            'playlister:playlist:delete' => [
+                                'label' => Craft::t('craftplaylister', 'Delete playlists'),
                             ],
                         ],
                     ],
-                    'youtube-playlist-importer:plugin-settings' => [
-                        'label' => Craft::t('youtubeplaylistimporter', 'Edit Plugin Settings'),
+                    'playlister:plugin-settings' => [
+                        'label' => Craft::t('craftplaylister', 'Edit Plugin Settings'),
                     ],
                 ],
             ];
@@ -129,7 +129,7 @@ trait PluginTrait
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function(Event $event) {
             /** @var CraftVariable $variable */
             $variable = $event->sender;
-            $variable->set('ypi', YoutubePlaylistImportVariable::class);
+            $variable->set('playlister', PlaylisterVariable::class);
         });
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\controllers;
+namespace appmanschap\craftplaylister\controllers;
 
-use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
+use appmanschap\craftplaylister\elements\Video as VideoElement;
 use Craft;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\UrlHelper;
@@ -27,17 +27,17 @@ class VideoController extends Controller
     {
         $this->requireCpRequest();
 
-        $this->requirePermission('youtube-playlist-importer:video');
+        $this->requirePermission('playlister:video');
 
-        return $this->renderTemplate('youtube-playlist-importer/videos/_index', [
-            'title' => Craft::t('youtubeplaylistimporter', 'Videos'),
+        return $this->renderTemplate('craft-playlister/videos/_index', [
+            'title' => Craft::t('craftplaylister', 'Videos'),
             'selectedSubnavItem' => 'videos',
             'fullPageForm' => false,
             'canHaveDrafts' => false,
             'elementType' => VideoElement::class,
             'crumbs' => $this->getCrumbs([
                 'label' => 'Videos',
-                'url' => UrlHelper::cpUrl("youtube-playlist/videos"),
+                'url' => UrlHelper::cpUrl("craft-playlister/videos"),
             ]),
         ]);
     }
@@ -54,7 +54,7 @@ class VideoController extends Controller
     {
         $this->requireCpRequest();
 
-        $this->requirePermission('youtube-playlist-importer:video:update');
+        $this->requirePermission('playlister:video:update');
 
         $video = VideoElement::findOne($elementId);
 
@@ -62,7 +62,7 @@ class VideoController extends Controller
             throw new HttpException(404);
         }
 
-        return $this->renderTemplate('youtube-playlist-importer/videos/_form', [
+        return $this->renderTemplate('craft-playlister/videos/_form', [
             'title' => $video->title,
             'selectedSubnavItem' => 'videos',
             'fullPageForm' => false,
@@ -78,12 +78,12 @@ class VideoController extends Controller
      */
     private function getCrumbs(array $currentCrumb): array
     {
-        $pluginName = 'Youtube Playlist Importer';
+        $pluginName = 'Playlister';
 
         $crumbs = [
             [
                 'label' => $pluginName,
-                'url' => UrlHelper::cpUrl('youtube-playlist'),
+                'url' => UrlHelper::cpUrl('playlister'),
             ],
         ];
 

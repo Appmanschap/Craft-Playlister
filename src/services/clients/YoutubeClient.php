@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\services\clients;
+namespace appmanschap\craftplaylister\services\clients;
 
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
+use appmanschap\craftplaylister\Playlister;
 use Craft;
 use craft\helpers\App;
 use Exception;
@@ -32,10 +32,10 @@ class YoutubeClient implements PlaylistClient
         $siteName = Craft::$app->sites->getCurrentSite()->name ?? 'Site-name';
 
         $this->client = new GoogleClient();
-        $this->client->setApplicationName("CraftCMS:Youtube-Playlist-Importer:{$siteName}");
+        $this->client->setApplicationName("CraftCMS:Playlister:{$siteName}");
 
         // Warn if the API key isn't set.
-        $youtubeApiKeyValue = YoutubePlaylistImporter::$plugin?->getSettings()->youtubeApiKey;
+        $youtubeApiKeyValue = Playlister::$plugin?->getSettings()->youtubeApiKey;
         $youtubeApiKey = (string) App::parseEnv($youtubeApiKeyValue);
 
         if (empty($youtubeApiKey)) {

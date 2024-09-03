@@ -1,10 +1,10 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\fields;
+namespace appmanschap\craftplaylister\fields;
 
-use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
-use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
+use appmanschap\craftplaylister\elements\db\VideoQuery;
+use appmanschap\craftplaylister\elements\Video as VideoElement;
+use appmanschap\craftplaylister\Playlister;
 use Craft;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\ElementCollection;
@@ -20,7 +20,7 @@ class Videos extends BaseRelationField
 {
     public static function displayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'YouTube Video ({pluginName})', ['pluginName' => YoutubePlaylistImporter::$plugin?->name]);
+        return Craft::t('craftplaylister', 'Video ({pluginName})', ['pluginName' => Playlister::$plugin?->name]);
     }
 
     public static function icon(): string
@@ -44,7 +44,7 @@ class Videos extends BaseRelationField
      */
     public static function defaultSelectionLabel(): string
     {
-        return Craft::t('youtubeplaylistimporter', 'Add a YouTube video');
+        return Craft::t('craftplaylister', 'Add a video');
     }
 
     /**

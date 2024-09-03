@@ -4,14 +4,14 @@
 
 {% set formActions = [
   {
-    label: 'Save and continue editing'|t('plugin-handle'),
-    redirect: 'youtube-playlist/playlists/{id}' | hash,
+    label: 'Save and continue editing'|t('craftplaylister'),
+    redirect: 'craft-playlister/playlists/{id}' | hash,
     retainScroll: true,
     shortcut: true,
   },
   {
-    label: 'Save and add another'|t('plugin-handle'),
-    redirect: 'youtube-playlist/playlists/new' | hash,
+    label: 'Save and add another'|t('craftplaylister'),
+    redirect: 'craft-playlister/playlists/new' | hash,
     shortcut: true,
     shift: true,
   }
@@ -23,13 +23,13 @@
 {#  <div class="flex-grow"></div>#}
 {#  <div class="flex-grow"></div>#}
 
-{#  <a class="formsubmit btn" data-action="{{ 'youtube-playlist-importer/playlist/start-job' }}" data-redirect="{{ '{cpEditUrl}' |hash }}">Run job</a>#}
+{#  <a class="formsubmit btn" data-action="{{ 'playlister/playlist/start-job' }}" data-redirect="{{ '{cpEditUrl}' |hash }}">Run job</a>#}
 
 {#  {{ block('actionButton') }}#}
 {#{% endblock %}#}
 
 {% block content %}
-  {{ actionInput('youtube-playlist-importer/playlist/save') }}
+  {{ actionInput('craft-playlister/playlist/save') }}
 
   <div>
     {% if playlist.playlistId %}
@@ -47,7 +47,7 @@
 
     {{ forms.textField({
       label: 'Youtube Playlist URL',
-      instructions: 'The playlist URL to import'|t('youtube-playlist-importer'),
+      instructions: 'The playlist URL to import'|t('craftplaylister'),
       id: 'youtube-playlist',
       name: 'youtubeUrl',
       value: playlist.youtubeUrl,
@@ -57,7 +57,7 @@
 
     {{ forms.textField({
       label: 'Playlist name',
-      instructions: 'The playlist URL or playlist ID to import'|t('youtube-playlist-importer'),
+      instructions: 'The playlist URL or playlist ID to import'|t('craftplaylister'),
       id: 'playlist-name',
       name: 'name',
       value: playlist.name,

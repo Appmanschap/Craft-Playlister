@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\services\clients;
+namespace appmanschap\craftplaylister\services\clients;
 
 use Google\Service\YouTube;
 

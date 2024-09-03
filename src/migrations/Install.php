@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\migrations;
+namespace appmanschap\craftplaylister\migrations;
 
 use craft\db\Migration;
 
@@ -19,8 +19,8 @@ class Install extends Migration
 
     public function safeDown(): bool
     {
-        $this->dropTableIfExists('{{%youtube_playlists}}');
-        $this->dropTableIfExists('{{%youtube_playlist_videos}}');
+        $this->dropTableIfExists('{{%playlister_playlists}}');
+        $this->dropTableIfExists('{{%playlister_videos}}');
 
         return true;
     }
@@ -30,8 +30,8 @@ class Install extends Migration
      */
     private function createTables(): void
     {
-        $this->archiveTableIfExists('{{%youtube_playlists}}');
-        $this->createTable('{{%youtube_playlists}}', [
+        $this->archiveTableIfExists('{{%playlister_playlists}}');
+        $this->createTable('{{%playlister_playlists}}', [
             'id' => $this->primaryKey(),
             'playlistId' => $this->string()->notNull(),
             'youtubeUrl' => $this->string()->notNull(),
@@ -40,12 +40,11 @@ class Install extends Migration
             'limit' => $this->integer()->unsigned()->defaultValue(50),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
-            'dateDeleted' => $this->dateTime()->null(),
             'uid' => $this->uid(),
         ]);
 
-        $this->archiveTableIfExists('{{%youtube_playlist_videos}}');
-        $this->createTable('{{%youtube_playlist_videos}}', [
+        $this->archiveTableIfExists('{{%playlister_videos}}');
+        $this->createTable('{{%playlister_videos}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'description' => $this->mediumText()->notNull(),
