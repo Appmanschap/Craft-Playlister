@@ -1,11 +1,11 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements;
+namespace appmanschap\craftplaylister\elements;
 
-use appmanschap\youtubeplaylistimporter\elements\conditions\VideoCondition;
-use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
-use appmanschap\youtubeplaylistimporter\enums\VideoThumbnailSize;
-use appmanschap\youtubeplaylistimporter\records\VideoRecord;
+use appmanschap\craftplaylister\elements\conditions\VideoCondition;
+use appmanschap\craftplaylister\elements\db\VideoQuery;
+use appmanschap\craftplaylister\enums\VideoThumbnailSize;
+use appmanschap\craftplaylister\records\VideoRecord;
 use Craft;
 use craft\base\Element;
 use craft\elements\conditions\ElementConditionInterface;
@@ -40,22 +40,22 @@ class Video extends Element
 
     public static function displayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Video');
+        return Craft::t('craftplaylister', 'Video');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'video');
+        return Craft::t('craftplaylister', 'video');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'Videos');
+        return Craft::t('craftplaylister', 'Videos');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('youtube-playlist-importer', 'videos');
+        return Craft::t('craftplaylister', 'videos');
     }
 
     public static function refHandle(): ?string
@@ -111,7 +111,7 @@ class Video extends Element
         $sources = [
             [
                 'key' => '*',
-                'label' => Craft::t('youtube-playlist-importer', 'All videos'),
+                'label' => Craft::t('craftplaylister', 'All videos'),
             ],
         ];
 
@@ -201,8 +201,8 @@ class Video extends Element
     {
         return [
             'id' => ['label' => Craft::t('app', 'ID')],
-            'videoId' => ['label' => Craft::t('youtubeplaylistimporter', 'YouTube Video ID')],
-            'embeddable' => ['label' => Craft::t('youtubeplaylistimporter', 'Embeddable')],
+            'videoId' => ['label' => Craft::t('craftplaylister', 'YouTube Video ID')],
+            'embeddable' => ['label' => Craft::t('craftplaylister', 'Embeddable')],
             'uid' => ['label' => Craft::t('app', 'UID')],
             'datePublished' => ['label' => Craft::t('app', 'Published at')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
@@ -281,7 +281,7 @@ class Video extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:videos');
+        return $user->can('playlister:videos');
     }
 
     public function canSave(User $user): bool
@@ -290,7 +290,7 @@ class Video extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:videos:update');
+        return $user->can('playlister:videos:update');
     }
 
     public function canDuplicate(User $user): bool
@@ -299,7 +299,7 @@ class Video extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:videos:update');
+        return $user->can('playlister:videos:update');
     }
 
     public function canDelete(User $user): bool
@@ -308,7 +308,7 @@ class Video extends Element
             return true;
         }
 
-        return $user->can('youtube-playlist-importer:videos:delete');
+        return $user->can('playlister:videos:delete');
     }
 
     public function canCreateDrafts(User $user): bool
@@ -318,7 +318,7 @@ class Video extends Element
 
     protected function cpEditUrl(): ?string
     {
-        return sprintf('youtube-playlist/videos/%s', $this->getCanonicalId());
+        return sprintf('playlister/videos/%s', $this->getCanonicalId());
     }
 
     public function getPostEditUrl(): ?string

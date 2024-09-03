@@ -1,13 +1,13 @@
 {% extends '_layouts/elementindex' %}
-{% set elementType = 'appmanschap\\youtubeplaylistimporter\\elements\\Playlist' %}
+{% set elementType = 'appmanschap\\craftplaylister\\elements\\Playlist' %}
 
 {% block actionButton %}
     <div class="buttons">
         <form method="POST">
             {{ csrfInput() }}
-            {{ actionInput('youtube-playlist-importer/playlist/create') }}
+            {{ actionInput('craft-playlister/playlist/create') }}
             <input type="hidden" name="elementType" value="{{ elementType }}" />
-            <button type="submit" class="btn submit">{{ 'New playlist' | t('youtubeplaylistimporter') }}</button>
+            <button type="submit" class="btn submit">{{ 'New playlist' | t('craftplaylister') }}</button>
         </form>
     </div>
 {% endblock %}

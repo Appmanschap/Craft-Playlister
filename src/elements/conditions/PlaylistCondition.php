@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements\conditions;
+namespace appmanschap\craftplaylister\elements\conditions;
 
 use craft\elements\conditions\ElementCondition;
 

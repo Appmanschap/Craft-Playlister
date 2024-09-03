@@ -1,12 +1,12 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\services;
+namespace appmanschap\craftplaylister\services;
 
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
-use appmanschap\youtubeplaylistimporter\enums\VideoThumbnailSize;
-use appmanschap\youtubeplaylistimporter\services\clients\PlaylistClient;
-use appmanschap\youtubeplaylistimporter\services\clients\YoutubeClient;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\elements\Video as VideoElement;
+use appmanschap\craftplaylister\enums\VideoThumbnailSize;
+use appmanschap\craftplaylister\services\clients\PlaylistClient;
+use appmanschap\craftplaylister\services\clients\YoutubeClient;
 use Craft;
 use DateTime;
 use Google\Service\Exception;

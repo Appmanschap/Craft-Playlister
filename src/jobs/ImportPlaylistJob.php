@@ -1,9 +1,9 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\jobs;
+namespace appmanschap\craftplaylister\jobs;
 
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\Playlister;
 use Craft;
 use craft\queue\BaseJob;
 
@@ -23,11 +23,11 @@ class ImportPlaylistJob extends BaseJob
     public function execute($queue): void
     {
         try {
-            YoutubePlaylistImporter::getInstance()->playlistImport->import($this->playlist);
+            Playlister::getInstance()->playlistImport->import($this->playlist);
         } catch (\Throwable $exception) {
             Craft::error(
                 sprintf(
-                    'Youtube playlist import task failed %s, %s',
+                    'Playlister task failed %s, %s',
                     $exception->getMessage(),
                     $exception->getTraceAsString()
                 ),
@@ -41,6 +41,6 @@ class ImportPlaylistJob extends BaseJob
 
     protected function defaultDescription(): ?string
     {
-        return Craft::t('youtubeplaylistimporter', 'Import YouTube playlist: "{title}"', ['title' => $this->playlist->name]);
+        return Craft::t('craftplaylister', 'Import YouTube playlist: "{title}"', ['title' => $this->playlist->name]);
     }
 }

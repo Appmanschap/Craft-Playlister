@@ -1,15 +1,15 @@
 {
-    "name": "appmanschap/craft-youtube-playlist-importer",
-    "description": "Import Playlistitems directly into CraftCMS",
+    "name": "appmanschap/craft-playlister",
+    "description": "Import Playlists directly into CraftCMS",
     "version": "1.0.0",
     "type": "craft-plugin",
     "license": "proprietary",
     "support": {
         "email": "info@appmanschap.nl",
-        "issues": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git/issues?state=open",
-        "source": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
-        "docs": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
-        "rss": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git/releases.atom"
+        "issues": "https://github.com/github.com:appmanschap/craft-playlister.git/issues?state=open",
+        "source": "https://github.com/github.com:appmanschap/craft-playlister.git",
+        "docs": "https://github.com/github.com:appmanschap/craft-playlister.git",
+        "rss": "https://github.com/github.com:appmanschap/craft-playlister.git/releases.atom"
     },
     "require": {
         "php": ">=8.2",
@@ -22,15 +22,15 @@
     },
     "autoload": {
         "psr-4": {
-            "appmanschap\\youtubeplaylistimporter\\": "src/"
+            "appmanschap\\craftplaylister\\": "src/"
         }
     },
     "extra": {
-        "handle": "youtube-playlist-importer",
-        "name": "Youtube Playlist Importer",
+        "handle": "craft-playlister",
+        "name": "Playlister",
         "developer": "Appmanschap",
         "documentationUrl": "https://github.com/github.com:appmanschap/youtube-playlist-importer.git",
-        "class": "appmanschap\\youtubeplaylistimporter\\YoutubePlaylistImporter"
+        "class": "appmanschap\\craftplaylister\\Playlister"
     },
     "scripts": {
         "check-cs": "vendor/bin/ecs check --ansi",

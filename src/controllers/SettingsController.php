@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\controllers;
+namespace appmanschap\craftplaylister\controllers;
 
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
+use appmanschap\craftplaylister\Playlister;
 use Craft;
 use craft\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -23,8 +23,8 @@ class SettingsController extends Controller
     public function actionPlugin(): mixed
     {
         $user = Craft::$app->getUser()->getIdentity();
-        if (!$user?->can('youtube-playlist-importer:plugin-settings')) {
-            throw new ForbiddenHttpException('You do not have permission to edit Youtube Playlist Importer plugin settings.');
+        if (!$user?->can('playlister:plugin-settings')) {
+            throw new ForbiddenHttpException('You do not have permission to edit Playlister plugin settings.');
         }
 
         $general = Craft::$app->getConfig()->getGeneral();
@@ -33,6 +33,6 @@ class SettingsController extends Controller
         }
 
         // Render the template
-        return YoutubePlaylistImporter::$plugin?->getSettingsResponse(render: true);
+        return Playlister::$plugin?->getSettingsResponse(render: true);
     }
 }

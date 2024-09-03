@@ -1,10 +1,10 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\controllers;
+namespace appmanschap\craftplaylister\controllers;
 
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use appmanschap\youtubeplaylistimporter\jobs\ImportPlaylistJob;
-use appmanschap\youtubeplaylistimporter\supports\Cast;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
+use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\controllers\ElementsController;
 use craft\db\Query;
@@ -34,9 +34,9 @@ class PlaylistController extends ElementsController
     {
         $this->requireCpRequest();
 
-        $this->requirePermission('youtube-playlist-importer:playlist');
+        $this->requirePermission('playlister:playlist');
 
-        return $this->renderTemplate('youtube-playlist-importer/playlist/_index');
+        return $this->renderTemplate('craft-playlister/playlist/_index');
     }
 
     /**
@@ -49,14 +49,14 @@ class PlaylistController extends ElementsController
     {
         $this->requireCpRequest();
 
-        $this->requirePermission('youtube-playlist-importer:playlist:create');
+        $this->requirePermission('playlister:playlist:create');
 
         if (is_null($playlist)) {
             $playlist = new PlaylistElement();
         }
 
-        return $this->renderTemplate('youtube-playlist-importer/playlist/_form', [
-            'title' => Craft::t('youtubeplaylistimporter', 'New playlist'),
+        return $this->renderTemplate('craft-playlister/playlist/_form', [
+            'title' => Craft::t('craftplaylister', 'New playlist'),
             'selectedSubnavItem' => 'playlists',
             'fullPageForm' => true,
             'playlist' => $playlist,
@@ -73,7 +73,7 @@ class PlaylistController extends ElementsController
     {
         $this->requireCpRequest();
 
-        $this->requirePermission('youtube-playlist-importer:playlist:update');
+        $this->requirePermission('playlister:playlist:update');
 
         $playlistId = Cast::mixedToInt($this->request->getParam('id'));
         $playlist = Craft::$app->getElements()->getElementById($playlistId, PlaylistElement::class);
@@ -86,7 +86,7 @@ class PlaylistController extends ElementsController
 
         Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
 
-        $this->setSuccessFlash(Craft::t('youtubeplaylistimporter', 'Job scheduled.'));
+        $this->setSuccessFlash(Craft::t('craftplaylister', 'Job scheduled.'));
 
         return $this->redirectToPostedUrl($playlist);
     }

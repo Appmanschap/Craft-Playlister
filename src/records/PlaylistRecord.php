@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\records;
+namespace appmanschap\craftplaylister\records;
 
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
 use craft\db\ActiveRecord;
 use craft\db\SoftDeleteTrait;
 use craft\records\Element;
@@ -25,14 +25,14 @@ use yii\db\ActiveQueryInterface;
  */
 class PlaylistRecord extends ActiveRecord
 {
-    use SoftDeleteTrait;
+//    use SoftDeleteTrait;
 
     /**
      * @return string
      */
     public static function tableName(): string
     {
-        return '{{%youtube_playlists}}';
+        return '{{%playlister_playlists}}';
     }
 
     /**

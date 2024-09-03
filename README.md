@@ -1,7 +1,7 @@
-<p align="center"><img src="src/icon.svg" width="100" height="100" alt="Youtube Playlist importer" /></p>
-<h1 align="center">YouTube Playlist importer for Craft CMS</h1>
+<p align="center"><img src="src/icon.svg" width="100" height="100" alt="Playlister Craft plugin icon" /></p>
+<h1 align="center">Playlister for Craft CMS</h1>
 
-YouTube Playlist Importer is a CraftCMS plugin for importing YouTube playlists into Craft. Retrieve the playlists and the corresponding videos.
+Playlister is a CraftCMS plugin for importing YouTube playlists into Craft. Retrieve the playlists and the corresponding videos.
 
 ## Requirements
 This plugin requires CraftCMS 5.0.0-beta.2 or later.
@@ -12,13 +12,13 @@ To install the plugin, either install it from the plugin store, or follow these 
 1) Install with composer
 
 ```sh
-composer require appmanschap/craft-youtube-playlist-importer
+composer require appmanschap/craft-playlister
 ```
 
 2) Install the plugin
 
 ```sh
-craft plugin/install youtube-playlist-importer
+craft plugin/install craft-playlister
 ```
 
 3) Add your YouTube API token in the settings.
@@ -30,33 +30,33 @@ You can retrieve playlists & videos either by using [Fields](#fields) the [Templ
 Create a new Playlist Field or Video Field and add it to your entry type.
 
 ## Template variables
-### craft.ypi.playlists()
+### craft.playlister.playlists()
 Returns a PlaylistQuery. Query as you like to retrieve the playlists. Example (retrieve enabled playlists): 
 ```twig
-craft.ypi.playlists.enabled(true).all()
+craft.playlister.playlists.enabled(true).all()
 ```
 
 #### Retrieve a single playlist by the playlist id
 ```twig
-craft.ypi.playlists.playlistId(YOUR-PLAYLIST-ID).one()
+craft.playlister.playlists.playlistId(YOUR-PLAYLIST-ID).one()
 ```
 
-### craft.ypi.videos()
+### craft.playlister.videos()
 Returns a VideoQuery. Query as you like to retrieve the videos.
 
 #### Retrieve embeddable videos example
 ```twig
-craft.ypi.videos.embeddable(true).all()
+craft.playlister.videos.embeddable(true).all()
 ```
 
 #### Retrieve videos from a playlist
 ```twig
-craft.ypi.videos.playlistId(YOUR-PLAYLIST-ID).all()
+craft.playlister.videos.playlistId(YOUR-PLAYLIST-ID).all()
 ```
 
 #### Retrieve videos with tags example
 ```twig
-craft.ypi.videos.tags[('awesome', 'video']).all()
+craft.playlister.videos.tags[('awesome', 'video']).all()
 ```
 
 ## Playlist element
@@ -78,4 +78,4 @@ Possible sizes:
 
 
 ## Support
-Get in touch by [creating a Github issue](https://github.com/Appmanschap/YouTube-Playlist-Importer/issues)
+Get in touch by [creating a Github issue](https://github.com/Appmanschap/Craft-Playlister/issues)

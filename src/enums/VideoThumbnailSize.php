@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\enums;
+namespace appmanschap\craftplaylister\enums;
 
 /**
  * @link      https://www.appmanschap.nl

@@ -1,8 +1,8 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements\conditions;
+namespace appmanschap\craftplaylister\elements\conditions;
 
-use appmanschap\youtubeplaylistimporter\elements\conditions\rules\EmbeddableConditionRule;
+use appmanschap\craftplaylister\elements\conditions\rules\EmbeddableConditionRule;
 use craft\elements\conditions\ElementCondition;
 use craft\errors\InvalidTypeException;
 

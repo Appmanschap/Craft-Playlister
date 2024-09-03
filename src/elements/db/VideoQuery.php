@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\elements\db;
+namespace appmanschap\craftplaylister\elements\db;
 
 use craft\base\ElementInterface;
 use craft\db\QueryAbortedException;
@@ -38,22 +38,22 @@ class VideoQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable("{{%youtube_playlist_videos}}");
+        $this->joinElementTable("{{%playlister_videos}}");
 
         $this->query?->select([
-            "{{%youtube_playlist_videos}}.*",
+            "{{%playlister_videos}}.*",
         ]);
 
         if ($this->playlistId) {
-            $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $this->playlistId) ?? []);
+            $this->subQuery?->andWhere(Db::parseParam('{{%playlister_videos}}.playlistId', $this->playlistId) ?? []);
         }
 
         if (!is_null($this->embeddable)) {
-            $this->subQuery?->andWhere(Db::parseBooleanParam('{{%youtube_playlist_videos}}.embeddable', $this->embeddable));
+            $this->subQuery?->andWhere(Db::parseBooleanParam('{{%playlister_videos}}.embeddable', $this->embeddable));
         }
 
         if ($this->tags) {
-            array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%youtube_playlist_videos}}.playlistId', $tag, 'like') ?? []), $this->tags);
+            array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%playlister_videos}}.playlistId', $tag, 'like') ?? []), $this->tags);
         }
 
         return parent::beforePrepare();

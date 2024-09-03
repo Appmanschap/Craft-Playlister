@@ -1,10 +1,10 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\console\controllers;
+namespace appmanschap\craftplaylister\console\controllers;
 
-use appmanschap\youtubeplaylistimporter\elements\db\PlaylistQuery;
-use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
-use appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter;
+use appmanschap\craftplaylister\elements\db\PlaylistQuery;
+use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
+use appmanschap\craftplaylister\Playlister;
 use craft\console\Controller;
 use craft\helpers\Console;
 use yii\console\ExitCode;
@@ -37,7 +37,7 @@ class PlaylistController extends Controller
     }
 
     /**
-     * youtube-playlist-importer/playlist command
+     * playlister/playlist command
      */
     public function actionImport(): int
     {
@@ -57,7 +57,7 @@ class PlaylistController extends Controller
 
         $query->collect()->each(function($playlist) {
             $this->stdout("Import videos for playlist '{$playlist->name}'..." . PHP_EOL, Console::FG_YELLOW);
-            YoutubePlaylistImporter::getInstance()->playlistImport->import($playlist);
+            Playlister::getInstance()->playlistImport->import($playlist);
         });
 
         $this->stdout("Done." . PHP_EOL, Console::FG_GREEN);

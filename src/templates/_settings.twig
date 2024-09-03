@@ -1,13 +1,13 @@
-{# @var plugin \appmanschap\youtubeplaylistimporter\YoutubePlaylistImporter #}
-{# @var settings \appmanschap\youtubeplaylistimporter\models\Settings #}
+{# @var plugin \appmanschap\craftplaylister\Playlister #}
+{# @var settings \appmanschap\craftplaylister\models\Settings #}
 
 {% set selectedSubnavItem = 'settings' %}
 {% import '_includes/forms.twig' as forms %}
 
 <div>
 {{ forms.autosuggestField({
-  label: "Youtube API key"|t("youtubeplaylistimporter"),
-  instructions: "The API key will be used to retrieve the playlist items of a specific playlist"|t("youtubeplaylistimporter"),
+  label: "Youtube API key"|t("craftplaylister"),
+  instructions: "The API key will be used to retrieve the playlist items of a specific playlist"|t("craftplaylister"),
   suggestEnvVars: true,
   suggestAliases: false,
   id: "youtubeApiKey",

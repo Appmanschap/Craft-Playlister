@@ -1,6 +1,6 @@
 <?php
 
-namespace appmanschap\youtubeplaylistimporter\supports;
+namespace appmanschap\craftplaylister\supports;
 
 /**
  * @link      https://www.appmanschap.nl
