@@ -11,6 +11,9 @@ use craft\elements\ElementCollection;
 use craft\fields\BaseRelationField;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Playlists field type
  */
 class Playlists extends BaseRelationField

@@ -11,6 +11,9 @@ use yii\console\ExitCode;
 
 /**
  * Playlist controller
+ *
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
  */
 class PlaylistController extends Controller
 {

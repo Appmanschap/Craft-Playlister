@@ -2,6 +2,10 @@
 
 namespace appmanschap\youtubeplaylistimporter\enums;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 enum VideoThumbnailSize: string
 {
     case DEFAULT = 'default';

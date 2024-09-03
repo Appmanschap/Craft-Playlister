@@ -10,6 +10,10 @@ use craft\base\ElementInterface;
 use craft\elements\conditions\ElementConditionRuleInterface;
 use craft\elements\db\ElementQueryInterface;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class EmbeddableConditionRule extends BaseLightswitchConditionRule implements ElementConditionRuleInterface
 {
     public function getLabel(): string

@@ -6,6 +6,9 @@ use craft\elements\conditions\ElementCondition;
 
 /**
  * Playlist condition
+ *
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
  */
 class PlaylistCondition extends ElementCondition
 {

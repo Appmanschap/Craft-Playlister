@@ -8,6 +8,9 @@ use craft\errors\InvalidTypeException;
 
 /**
  * Video condition
+ *
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
  */
 class VideoCondition extends ElementCondition
 {

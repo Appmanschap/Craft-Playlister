@@ -8,6 +8,10 @@ use craft\web\twig\variables\Cp;
 use craft\web\UrlManager;
 use yii\base\Event;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 trait Routes
 {
     /**

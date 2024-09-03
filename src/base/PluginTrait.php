@@ -22,6 +22,10 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use yii\base\Event;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 trait PluginTrait
 {
     /**

@@ -12,6 +12,10 @@ use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class VideoController extends Controller
 {
     /**

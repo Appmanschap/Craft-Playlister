@@ -5,6 +5,9 @@ namespace appmanschap\youtubeplaylistimporter\models;
 use craft\base\Model;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Youtube Playlist Importer settings
  */
 class Settings extends Model
