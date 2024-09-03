@@ -1,6 +1,7 @@
 {
     "name": "appmanschap/craft-youtube-playlist-importer",
     "description": "Import Playlistitems directly into CraftCMS",
+    "version": "1.0.0",
     "type": "craft-plugin",
     "license": "proprietary",
     "support": {
