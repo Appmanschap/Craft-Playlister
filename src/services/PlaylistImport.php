@@ -168,7 +168,9 @@ class PlaylistImport extends Component
                 $video = new VideoElement();
             }
 
-            $thumbnails = array_keys(json_decode(json_encode($youtubeVideoSnippet->getThumbnails()->toSimpleObject()), true) ?? []);
+            $encodedThumnails = json_encode($youtubeVideoSnippet->getThumbnails()->toSimpleObject()) ?: '';
+            $thumbnails = json_decode($encodedThumnails, true) ?? [];
+            $thumbnails = array_keys(is_array($thumbnails) ? $thumbnails : []);
             $tags = empty($youtubeVideoSnippet->getTags()) ? [] : $youtubeVideoSnippet->getTags();
 
             $video->videoId = $videoId;

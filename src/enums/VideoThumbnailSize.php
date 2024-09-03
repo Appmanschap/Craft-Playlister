@@ -27,7 +27,7 @@ enum VideoThumbnailSize: string
         }
 
         if ($requestedSizeKey <= $possibleSizeKey) {
-            return $thumbnailSizes[$requestedSizeKey] ?? $this->value;
+            return $thumbnailSizes[$requestedSizeKey];
         }
 
         return $this->value;

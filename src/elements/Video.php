@@ -383,14 +383,14 @@ class Video extends Element
      */
     public function getThumbnail(?string $size = null): string
     {
-        $size = $this->thumbnail->firstAvailableSize($size);
+        $size = $this->thumbnail->firstAvailableSize($size ?? '');
 
         return match ($size) {
             VideoThumbnailSize::DEFAULT->value => "https://i.ytimg.com/vi/{$this->videoId}/default.jpg",
             VideoThumbnailSize::MEDIUM->value => "https://i.ytimg.com/vi/{$this->videoId}/mqdefault.jpg",
             VideoThumbnailSize::HIGH->value => "https://i.ytimg.com/vi/{$this->videoId}/hqdefault.jpg",
-            VideoThumbnailSize::STANDARD->value => "https://i.ytimg.com/vi/{$this->videoId}/sddefault.jpg",
             VideoThumbnailSize::MAXRES->value => "https://i.ytimg.com/vi/{$this->videoId}/maxresdefault.jpg",
+            default => "https://i.ytimg.com/vi/{$this->videoId}/sddefault.jpg",
         };
     }
 }
