@@ -105,7 +105,7 @@ class PlaylistController extends ElementsController
             ->where(['like', 'job', ImportPlaylistJob::class])
             ->andWhere(['like', 'job', $uniqueJobPayload])
             ->collect()
-            ->each(function ($job) {
+            ->each(function($job) {
                 if (!is_array($job) || !isset($job['id'])) {
                     return;
                 }
