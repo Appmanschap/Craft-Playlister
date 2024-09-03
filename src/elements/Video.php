@@ -4,6 +4,7 @@ namespace appmanschap\youtubeplaylistimporter\elements;
 
 use appmanschap\youtubeplaylistimporter\elements\conditions\VideoCondition;
 use appmanschap\youtubeplaylistimporter\elements\db\VideoQuery;
+use appmanschap\youtubeplaylistimporter\enums\VideoThumbnailSize;
 use appmanschap\youtubeplaylistimporter\records\VideoRecord;
 use Craft;
 use craft\base\Element;
@@ -31,6 +32,7 @@ class Video extends Element
     public ?string $defaultAudioLanguage = 'en';
     public ?string $defaultLanguage = 'en';
     public bool $embeddable = false;
+    public VideoThumbnailSize $thumbnail = VideoThumbnailSize::DEFAULT;
     public string $tags = '';
 
     public static function displayName(): string
@@ -373,5 +375,22 @@ class Video extends Element
         }
 
         parent::afterDelete();
+    }
+
+    /**
+     * @param string|null $size
+     * @return string
+     */
+    public function getThumbnail(?string $size = null): string
+    {
+        $size = $this->thumbnail->firstAvailableSize($size ?? '');
+
+        return match ($size) {
+            VideoThumbnailSize::DEFAULT->value => "https://i.ytimg.com/vi/{$this->videoId}/default.jpg",
+            VideoThumbnailSize::MEDIUM->value => "https://i.ytimg.com/vi/{$this->videoId}/mqdefault.jpg",
+            VideoThumbnailSize::HIGH->value => "https://i.ytimg.com/vi/{$this->videoId}/hqdefault.jpg",
+            VideoThumbnailSize::MAXRES->value => "https://i.ytimg.com/vi/{$this->videoId}/maxresdefault.jpg",
+            default => "https://i.ytimg.com/vi/{$this->videoId}/sddefault.jpg",
+        };
     }
 }

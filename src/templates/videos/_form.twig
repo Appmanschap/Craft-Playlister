@@ -56,9 +56,15 @@
             </div>
         </div>
     </fieldset>
-    <fieldset class="field width-50" data-attribute="videoPlayer">
-        <div class="heading"><label id="video-title-label" for="video-title">Video</label></div>
-        <iframe width="480" height="300" src="https://www.youtube-nocookie.com/embed/{{ video.videoId }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <fieldset class="field width-50">
+        <div class="field video-field" data-attribute="videoPlayer">
+            <div class="heading"><label id="video-title-label" for="video-title">Video</label></div>
+            <iframe width="480" height="300" src="https://www.youtube-nocookie.com/embed/{{ video.videoId }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div class="field thumbnail-field" data-attribute="thumbnail">
+            <div class="heading"><label id="video-title-label" for="video-title">Thumbnail size ({{ video.thumbnail.value }})</label></div>
+            <div class="value"><img src="{{ video.getThumbnail('maxres') }}" /></div>
+        </div>
     <fieldset>
 </div>
 {% endblock %}
