@@ -2,12 +2,15 @@
 
 namespace appmanschap\youtubeplaylistimporter\base;
 
+use appmanschap\youtubeplaylistimporter\controllers\PlaylistController;
 use appmanschap\youtubeplaylistimporter\elements\Playlist;
 use appmanschap\youtubeplaylistimporter\elements\Video;
 use appmanschap\youtubeplaylistimporter\fields\Playlists;
 use appmanschap\youtubeplaylistimporter\fields\Videos;
 use appmanschap\youtubeplaylistimporter\variables\YoutubePlaylistImporter as YoutubePlaylistImportVariable;
 use Craft;
+use craft\controllers\ElementsController;
+use craft\events\DefineElementEditorHtmlEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\events\RegisterUserPermissionsEvent;
@@ -41,6 +44,19 @@ trait PluginTrait
     {
         Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function(RegisterTemplateRootsEvent $event) {
             $event->roots[$this->id] = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates/';
+        });
+    }
+
+    /**
+     * @return void
+     */
+    public function _registerEditorContents(): void
+    {
+        Event::on(PlaylistController::class, ElementsController::EVENT_DEFINE_EDITOR_CONTENT, function(DefineElementEditorHtmlEvent $event) {
+            $event->html = Craft::$app->getView()->renderTemplate('youtube-playlist-importer/playlist/_form', [
+                'title' => $event->element->title,
+                'playlist' => $event->element,
+            ]);
         });
     }
 
