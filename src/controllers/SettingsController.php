@@ -7,6 +7,10 @@ use Craft;
 use craft\web\Controller;
 use yii\web\ForbiddenHttpException;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class SettingsController extends Controller
 {
     protected array|bool|int $allowAnonymous = [];

@@ -10,6 +10,9 @@ use craft\helpers\Db;
 use yii\db\Connection as YiiConnection;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * @template TKey of array-key
  * @template TElement of Playlist
  * @extends ElementQuery<TKey, TElement>

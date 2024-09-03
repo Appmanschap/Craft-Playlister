@@ -10,6 +10,9 @@ use yii\base\Exception;
 use yii\db\ActiveQueryInterface;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Playlist Record record
  *
  * @property int|null $id

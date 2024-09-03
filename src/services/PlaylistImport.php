@@ -16,6 +16,9 @@ use Throwable;
 use yii\base\Component;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Playlist Import service
  */
 class PlaylistImport extends Component

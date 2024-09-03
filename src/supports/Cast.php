@@ -2,6 +2,10 @@
 
 namespace appmanschap\youtubeplaylistimporter\supports;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class Cast
 {
     /**

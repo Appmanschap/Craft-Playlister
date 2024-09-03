@@ -4,6 +4,10 @@ namespace appmanschap\youtubeplaylistimporter\migrations;
 
 use craft\db\Migration;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class Install extends Migration
 {
     public function safeUp(): bool

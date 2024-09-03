@@ -8,6 +8,9 @@ use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * @template TKey of array-key
  * @template TElement of ElementInterface
  * @extends ElementQuery<TKey, TElement>

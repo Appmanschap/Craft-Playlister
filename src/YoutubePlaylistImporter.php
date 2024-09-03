@@ -18,6 +18,9 @@ use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Youtube Playlist Importer plugin
  *
  * @method static YoutubePlaylistImporter getInstance()

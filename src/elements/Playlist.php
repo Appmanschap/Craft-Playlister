@@ -21,6 +21,9 @@ use yii\db\StaleObjectException;
 use yii\web\Response;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Playlist element type
  */
 class Playlist extends Element

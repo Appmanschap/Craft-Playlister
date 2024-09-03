@@ -8,6 +8,9 @@ use Craft;
 use craft\queue\BaseJob;
 
 /**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ *
  * Import Playlist Job queue job
  */
 class ImportPlaylistJob extends BaseJob

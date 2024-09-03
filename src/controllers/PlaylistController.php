@@ -15,6 +15,10 @@ use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 class PlaylistController extends ElementsController
 {
     /**
@@ -36,7 +40,7 @@ class PlaylistController extends ElementsController
     }
 
     /**
-     * @param  PlaylistElement|null  $playlist
+     * @param PlaylistElement|null $playlist
      * @return Response
      * @throws BadRequestHttpException
      * @throws ForbiddenHttpException
