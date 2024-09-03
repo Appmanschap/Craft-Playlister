@@ -319,7 +319,6 @@ class Playlist extends Element
 
     public function beforeSave(bool $isNew): bool
     {
-
         if (!$this->getIsDraft()) {
             $url_parts = parse_url(Cast::mixedToString($this->youtubeUrl));
             parse_str($url_parts['query'] ?? '', $query_parts);
