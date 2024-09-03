@@ -26,6 +26,7 @@ class m240813_122846_create_playlist_videos_table extends Migration
             'channelTitle' => $this->string()->notNull(),
             'defaultAudioLanguage' => $this->string()->null(),
             'defaultLanguage' => $this->string()->null(),
+            'thumbnail' => $this->string(),
             'embeddable' => $this->boolean()->defaultValue(false),
             'tags' => $this->mediumText()->notNull(),
 

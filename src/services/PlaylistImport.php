@@ -4,6 +4,7 @@ namespace appmanschap\youtubeplaylistimporter\services;
 
 use appmanschap\youtubeplaylistimporter\elements\Playlist as PlaylistElement;
 use appmanschap\youtubeplaylistimporter\elements\Video as VideoElement;
+use appmanschap\youtubeplaylistimporter\enums\VideoThumbnailSize;
 use appmanschap\youtubeplaylistimporter\services\clients\PlaylistClient;
 use appmanschap\youtubeplaylistimporter\services\clients\YoutubeClient;
 use Craft;
@@ -167,6 +168,7 @@ class PlaylistImport extends Component
                 $video = new VideoElement();
             }
 
+            $thumbnails = array_keys(json_decode(json_encode($youtubeVideoSnippet->getThumbnails()->toSimpleObject()), true) ?? []);
             $tags = empty($youtubeVideoSnippet->getTags()) ? [] : $youtubeVideoSnippet->getTags();
 
             $video->videoId = $videoId;
@@ -179,6 +181,7 @@ class PlaylistImport extends Component
             $video->defaultAudioLanguage = $youtubeVideoSnippet->getDefaultAudioLanguage();
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
+            $video->thumbnail = VideoThumbnailSize::tryFrom(array_slice($thumbnails, -1)[0] ?? '') ?? VideoThumbnailSize::DEFAULT;
             $video->tags = implode(', ', $tags);
 
             try {
