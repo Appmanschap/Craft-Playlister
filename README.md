@@ -30,33 +30,33 @@ You can retrieve playlists & videos either by using [Fields](#fields) the [Templ
 Create a new Playlist Field or Video Field and add it to your entry type.
 
 ## Template variables
-### craft.ypi.playlists()
+### craft.playlister.playlists()
 Returns a PlaylistQuery. Query as you like to retrieve the playlists. Example (retrieve enabled playlists): 
 ```twig
-craft.ypi.playlists.enabled(true).all()
+craft.playlister.playlists.enabled(true).all()
 ```
 
 #### Retrieve a single playlist by the playlist id
 ```twig
-craft.ypi.playlists.playlistId(YOUR-PLAYLIST-ID).one()
+craft.playlister.playlists.playlistId(YOUR-PLAYLIST-ID).one()
 ```
 
-### craft.ypi.videos()
+### craft.playlister.videos()
 Returns a VideoQuery. Query as you like to retrieve the videos.
 
 #### Retrieve embeddable videos example
 ```twig
-craft.ypi.videos.embeddable(true).all()
+craft.playlister.videos.embeddable(true).all()
 ```
 
 #### Retrieve videos from a playlist
 ```twig
-craft.ypi.videos.playlistId(YOUR-PLAYLIST-ID).all()
+craft.playlister.videos.playlistId(YOUR-PLAYLIST-ID).all()
 ```
 
 #### Retrieve videos with tags example
 ```twig
-craft.ypi.videos.tags[('awesome', 'video']).all()
+craft.playlister.videos.tags[('awesome', 'video']).all()
 ```
 
 ## Playlist element
