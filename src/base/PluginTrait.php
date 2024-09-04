@@ -87,6 +87,17 @@ trait PluginTrait
                             ],
                         ],
                     ],
+                    'playlister:video' => [
+                        'label' => Craft::t('craft-playlister', 'View videos'),
+                        'nested' => [
+                            'playlister:video:update' => [
+                                'label' => Craft::t('craft-playlister', 'Manage videos'),
+                            ],
+                            'playlister:video:delete' => [
+                                'label' => Craft::t('craft-playlister', 'Delete videos'),
+                            ],
+                        ],
+                    ],
                     'playlister:plugin-settings' => [
                         'label' => Craft::t('craft-playlister', 'Edit Plugin Settings'),
                     ],
