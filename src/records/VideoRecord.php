@@ -82,7 +82,7 @@ class VideoRecord extends ActiveRecord
         $this->embeddable = $videoElement->embeddable;
         $this->thumbnail = $videoElement->thumbnail->value;
         $this->tags = $videoElement->tags;
-        $this->uid = $videoElement->uid;
+        $this->uid = $videoElement->uid ?? '';
         return $this;
     }
 }
