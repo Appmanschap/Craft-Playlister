@@ -1,6 +1,12 @@
 <?php
 
 return [
+    // General
+    'Job scheduled.' => 'Taak gepland.',
+    'YouTube API key' => 'YouTube API sleutel',
+    'The API key will be used to retrieve the playlists & videos of a specific playlist' => 'De API sleutel wordt gebruikt om de playlists & video\'s op te halen',
+
+    // PLaylists
     'All playlists' => 'Alle playlists',
 
     'Playlists' => 'Playlists',
@@ -26,15 +32,20 @@ return [
     'The playlist URL to import' => 'De URL van de playlist om te importeren',
     'The name of the playlist' => 'De naam van de playlist',
 
+    // Video's
     'All videos' => 'Alle video\'s',
-
-    'Add a video' => 'Voeg video toe',
 
     'Videos' => 'Video\'s',
     'videos' => 'video\'s',
 
     'Video' => 'Video',
     'video' => 'video',
+
+    'View videos' => 'Bekijk video\'s',
+    'Manage videos' => 'Beheer video\'s',
+    'Delete videos' => 'Verwijder video\'s',
+
+    'Add a video' => 'Voeg video toe',
 
     'YouTube Video ID' => 'YouTube Video ID',
     'Embeddable' => 'Embeddable',
@@ -43,8 +54,4 @@ return [
     'Video tags' => 'Video tags',
     'Channel' => 'Kanaal',
     'Thumbnail size' => 'Thumbnail grootte',
-
-    'Job scheduled.' => 'Taak gepland.',
-    'YouTube API key' => 'YouTube API sleutel',
-    'The API key will be used to retrieve the playlists & videos of a specific playlist' => 'De API sleutel wordt gebruikt om de playlists & video\'s op te halen',
 ];
