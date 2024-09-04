@@ -1,20 +1,27 @@
 <?php
+
 namespace appmanschap\craftplaylister\traits;
 
-use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use Craft;
 use craft\db\Query;
 use craft\db\Table;
 use craft\queue\BaseJob;
 use craft\queue\Queue;
 
+/**
+ * @link      https://www.appmanschap.nl
+ * @copyright Copyright (c) 2024 Appmanschap
+ */
 trait HasJobs
 {
+    /**
+     * @return string
+     */
     abstract public function getUniqueJobPayload(): string;
 
     /**
      * @param class-string $jobClass
-     * @return Query
+     * @return Query<array-key, mixed>
      */
     public function getJobQuery(string $jobClass): Query
     {
@@ -51,7 +58,6 @@ trait HasJobs
             ->collect()
             ->each(function($job) {
                 if (!is_array($job) || !isset($job['id'])) {
-                    dd('oi');
                     return;
                 }
 

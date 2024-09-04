@@ -10,8 +10,6 @@ use appmanschap\craftplaylister\supports\Cast;
 use appmanschap\craftplaylister\traits\HasJobs;
 use Craft;
 use craft\base\Element;
-use craft\db\Query;
-use craft\db\Table;
 use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\ElementCollection;
@@ -163,7 +161,7 @@ class Playlist extends Element
 
     public function getAdditionalButtons(): string
     {
-        if (!$this->enabled || (!$this->refreshInterval == 0 && $this->hasRunningJob($this->getUniqueJobPayload()))) {
+        if (!$this->enabled || (!$this->refreshInterval == 0 && $this->hasRunningJob(ImportPlaylistJob::class))) {
             return '';
         }
 
@@ -405,7 +403,7 @@ class Playlist extends Element
             $record->delete();
         }
 
-        $this->getVideos()?->each(function (Video $video) {
+        $this->getVideos()?->each(function(Video $video) {
             Craft::$app->elements->deleteElement($video, $this->hardDelete);
         });
 
@@ -442,8 +440,9 @@ class Playlist extends Element
     {
         $this->releaseJobs(ImportPlaylistJob::class);
 
-        if ($this->enabled) {
-            Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => Craft::$app->getElements()->getElementById($this->id, self::class)]));
+        if ($this->enabled && $this->id) {
+            $playlist = Craft::$app->getElements()->getElementById($this->id, self::class);
+            Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
         }
     }
 

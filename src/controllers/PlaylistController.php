@@ -3,13 +3,9 @@
 namespace appmanschap\craftplaylister\controllers;
 
 use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
-use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\controllers\ElementsController;
-use craft\db\Query;
-use craft\db\Table;
-use craft\queue\Queue;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
