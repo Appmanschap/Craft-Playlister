@@ -23,7 +23,7 @@ trait Routes
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            static function (RegisterUrlRulesEvent $event) {
+            static function(RegisterUrlRulesEvent $event) {
                 $event->rules['playlister'] = 'craft-playlister/playlist/index';
                 $event->rules['playlister/playlists'] = 'craft-playlister/playlist/index';
                 $event->rules['playlister/playlists/new'] = 'craft-playlister/playlist/edit';
@@ -43,30 +43,32 @@ trait Routes
      */
     public function _registerNavItems(): void
     {
-        Event::on(Cp::class, Cp::EVENT_REGISTER_CP_NAV_ITEMS, function (RegisterCpNavItemsEvent $event) {
+        Event::on(Cp::class, Cp::EVENT_REGISTER_CP_NAV_ITEMS, function(RegisterCpNavItemsEvent $event) {
             $subNavItems = [];
 
             $currentUser = Craft::$app->getUser()->getIdentity();
 
-            if ($currentUser->can('playlister:playlist')) {
-                $subNavItems['playlists'] = [
-                    'url' => 'playlister/playlists',
-                    'label' => Craft::t('craft-playlister', 'Playlist'),
-                ];
-            }
+            if ($currentUser) {
+                if ($currentUser->can('playlister:playlist')) {
+                    $subNavItems['playlists'] = [
+                        'url' => 'playlister/playlists',
+                        'label' => Craft::t('craft-playlister', 'Playlist'),
+                    ];
+                }
 
-            if ($currentUser->can('playlister:video')) {
-                $subNavItems['videos'] = [
-                    'url' => 'playlister/videos',
-                    'label' => Craft::t('craft-playlister', 'Video'),
-                ];
-            }
+                if ($currentUser->can('playlister:video')) {
+                    $subNavItems['videos'] = [
+                        'url' => 'playlister/videos',
+                        'label' => Craft::t('craft-playlister', 'Video'),
+                    ];
+                }
 
-            if (Craft::$app->getConfig()->getGeneral()->allowAdminChanges && $currentUser->can('playlister:plugin-settings')) {
-                $subNavItems['settings'] = [
-                    'url' => 'playlister/settings',
-                    'label' => Craft::t('app', 'Settings'),
-                ];
+                if (Craft::$app->getConfig()->getGeneral()->allowAdminChanges && $currentUser->can('playlister:plugin-settings')) {
+                    $subNavItems['settings'] = [
+                        'url' => 'playlister/settings',
+                        'label' => Craft::t('app', 'Settings'),
+                    ];
+                }
             }
 
             $event->navItems[] = [
