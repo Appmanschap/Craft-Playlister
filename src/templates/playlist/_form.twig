@@ -4,13 +4,13 @@
 
 {% set formActions = [
   {
-    label: 'Save and continue editing'|t('craftplaylister'),
+    label: 'Save and continue editing'|t('app'),
     redirect: 'craft-playlister/playlists/{id}' | hash,
     retainScroll: true,
     shortcut: true,
   },
   {
-    label: 'Save and add another'|t('craftplaylister'),
+    label: 'Save and add another'|t('app'),
     redirect: 'craft-playlister/playlists/new' | hash,
     shortcut: true,
     shift: true,
@@ -47,7 +47,7 @@
 
     {{ forms.textField({
       label: 'Youtube Playlist URL',
-      instructions: 'The playlist URL to import'|t('craftplaylister'),
+      instructions: 'The playlist URL to import'|t('craft-playlister'),
       id: 'youtube-playlist',
       name: 'youtubeUrl',
       value: playlist.youtubeUrl,
@@ -56,8 +56,8 @@
     }) }}
 
     {{ forms.textField({
-      label: 'Playlist name',
-      instructions: 'The playlist URL or playlist ID to import'|t('craftplaylister'),
+      label: 'Playlist name'|t('craft-playlister'),
+      instructions: 'The name of the playlist'|t('craft-playlister'),
       id: 'playlist-name',
       name: 'name',
       value: playlist.name,
@@ -65,7 +65,7 @@
     }) }}
 
     {{ forms.selectField({
-      label: 'Refresh interval',
+      label: 'Refresh interval'|t('craft-playlister'),
       id: 'playlist-refresh-interval',
       name: 'refreshInterval',
       value: playlist.refreshInterval,
@@ -87,7 +87,7 @@
     }) }}
 
     {{ forms.selectField({
-      label: 'Limit',
+      label: 'Limit'|t('craft-playlister'),
       id: 'playlist-video-limit',
       name: 'limit',
       value: playlist.limit,

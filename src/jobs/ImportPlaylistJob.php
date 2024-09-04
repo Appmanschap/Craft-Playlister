@@ -41,6 +41,6 @@ class ImportPlaylistJob extends BaseJob
 
     protected function defaultDescription(): ?string
     {
-        return Craft::t('craftplaylister', 'Import YouTube playlist: "{title}"', ['title' => $this->playlist->name]);
+        return Craft::t('craft-playlister', 'Import YouTube playlist: "{title}"', ['title' => $this->playlist->name]);
     }
 }

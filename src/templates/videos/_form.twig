@@ -6,7 +6,7 @@
 <div class="flex-fields">
     <fieldset class="field width-50" data-attribute="videoDetails">
         {{ forms.textField({
-          label: 'Video title',
+          label: 'Video title'|t('craft-playlister'),
           id: 'video-title',
           name: 'videoTitle',
           value: video.title,
@@ -16,7 +16,7 @@
         }) }}
 
         {{ forms.textField({
-          label: 'Published at',
+          label: 'Published at'|t('craft-playlister'),
           id: 'video-published-at',
           name: 'videoPublishedAt',
           value: video.datePublished | date('short'),
@@ -26,7 +26,7 @@
         }) }}
 
         {{ forms.textareaField({
-          label: 'Video description',
+          label: 'Video description'|t('craft-playlister'),
           id: 'video-description',
           name: 'videoDescription',
           value: video.description,
@@ -37,7 +37,7 @@
         }) }}
 
         {{ forms.textareaField({
-          label: 'Video tags',
+          label: 'Video tags'|t('craft-playlister'),
           id: 'video-tags',
           name: 'videoTags',
           value: video.tags|split(', ')|join('\r\n'),
@@ -49,7 +49,7 @@
 
         <div id="channel-field" class="field" data-attribute="channel-title">
             <div class="heading">
-                <label id="channel-title-label" for="channel-title">Channel</label>
+                <label id="channel-title-label" for="channel-title">{{ 'Channel'|t('craft-playlister') }}</label>
             </div>
             <div class="ltr">
                 <a href="https://youtube.com/channel/{{ video.channelId }}" target="_blank" rel="noopener noreferrer">View "{{ video.channelTitle }}" channel</a>
@@ -58,11 +58,11 @@
     </fieldset>
     <fieldset class="field width-50">
         <div class="field video-field" data-attribute="videoPlayer">
-            <div class="heading"><label id="video-title-label" for="video-title">Video</label></div>
+            <div class="heading"><label id="video-title-label" for="video-title">{{ 'Video'|t('craft-playlister') }}</label></div>
             <iframe width="480" height="300" src="https://www.youtube-nocookie.com/embed/{{ video.videoId }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <div class="field thumbnail-field" data-attribute="thumbnail">
-            <div class="heading"><label id="video-title-label" for="video-title">Thumbnail size ({{ video.thumbnail.value }})</label></div>
+            <div class="heading"><label id="video-title-label" for="video-title">{{ 'Thumbnail size'|t('craft-playlister') }} ({{ video.thumbnail.value }})</label></div>
             <div class="value"><img src="{{ video.getThumbnail('maxres') }}" /></div>
         </div>
     <fieldset>
