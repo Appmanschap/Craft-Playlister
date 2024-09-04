@@ -18,7 +18,6 @@ use craft\elements\User;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\models\FieldLayout;
-use craft\queue\Queue;
 use craft\web\CpScreenResponseBehavior;
 use Throwable;
 use yii\base\InvalidConfigException;
@@ -168,7 +167,7 @@ class Playlist extends Element
         return Html::beginForm() .
         Html::actionInput('craft-playlister/playlist/start-job') .
         Html::redirectInput('{cpEditUrl}') .
-        Html::hiddenInput('playlistId', $this->id) .
+        Html::hiddenInput('playlistId', (string) $this->id) .
         Html::button(Craft::t('craft-playlister', 'Start job'), [
             'class' => ['btn', 'formsubmit'],
         ]) .
