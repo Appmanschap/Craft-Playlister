@@ -40,22 +40,22 @@ class Video extends Element
 
     public static function displayName(): string
     {
-        return Craft::t('craftplaylister', 'Video');
+        return Craft::t('craft-playlister', 'Video');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'video');
+        return Craft::t('craft-playlister', 'video');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'Videos');
+        return Craft::t('craft-playlister', 'Videos');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'videos');
+        return Craft::t('craft-playlister', 'videos');
     }
 
     public static function refHandle(): ?string
@@ -111,7 +111,7 @@ class Video extends Element
         $sources = [
             [
                 'key' => '*',
-                'label' => Craft::t('craftplaylister', 'All videos'),
+                'label' => Craft::t('craft-playlister', 'All videos'),
             ],
         ];
 
@@ -174,7 +174,7 @@ class Video extends Element
                 'defaultDir' => 'asc',
             ],
             [
-                'label' => Craft::t('app', 'Published at'),
+                'label' => Craft::t('craft-playlister', 'Published at'),
                 'orderBy' => 'datePublished',
                 'attribute' => 'datePublished',
                 'defaultDir' => 'desc',
@@ -201,10 +201,10 @@ class Video extends Element
     {
         return [
             'id' => ['label' => Craft::t('app', 'ID')],
-            'videoId' => ['label' => Craft::t('craftplaylister', 'YouTube Video ID')],
-            'embeddable' => ['label' => Craft::t('craftplaylister', 'Embeddable')],
+            'videoId' => ['label' => Craft::t('craft-playlister', 'YouTube Video ID')],
+            'embeddable' => ['label' => Craft::t('craft-playlister', 'Embeddable')],
             'uid' => ['label' => Craft::t('app', 'UID')],
-            'datePublished' => ['label' => Craft::t('app', 'Published at')],
+            'datePublished' => ['label' => Craft::t('craft-playlister', 'Published at')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
             // ...

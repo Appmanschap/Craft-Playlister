@@ -30,7 +30,7 @@ class VideoController extends Controller
         $this->requirePermission('playlister:video');
 
         return $this->renderTemplate('craft-playlister/videos/_index', [
-            'title' => Craft::t('craftplaylister', 'Videos'),
+            'title' => Craft::t('craft-playlister', 'Videos'),
             'selectedSubnavItem' => 'videos',
             'fullPageForm' => false,
             'canHaveDrafts' => false,

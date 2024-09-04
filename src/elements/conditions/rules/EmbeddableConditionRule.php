@@ -18,7 +18,7 @@ class EmbeddableConditionRule extends BaseLightswitchConditionRule implements El
 {
     public function getLabel(): string
     {
-        return Craft::t('craftplaylister', 'Embeddable');
+        return Craft::t('craft-playlister', 'Embeddable');
     }
 
     public function getExclusiveQueryParams(): array

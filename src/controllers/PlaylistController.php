@@ -56,7 +56,7 @@ class PlaylistController extends ElementsController
         }
 
         return $this->renderTemplate('craft-playlister/playlist/_form', [
-            'title' => Craft::t('craftplaylister', 'New playlist'),
+            'title' => Craft::t('craft-playlister', 'New playlist'),
             'selectedSubnavItem' => 'playlists',
             'fullPageForm' => true,
             'playlist' => $playlist,
@@ -86,7 +86,7 @@ class PlaylistController extends ElementsController
 
         Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
 
-        $this->setSuccessFlash(Craft::t('craftplaylister', 'Job scheduled.'));
+        $this->setSuccessFlash(Craft::t('craft-playlister', 'Job scheduled.'));
 
         return $this->redirectToPostedUrl($playlist);
     }

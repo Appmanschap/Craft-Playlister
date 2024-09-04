@@ -2,6 +2,7 @@
 
 namespace appmanschap\craftplaylister\base;
 
+use Craft;
 use craft\events\RegisterCpNavItemsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\Cp;
@@ -50,15 +51,15 @@ trait Routes
                 'subnav' => [
                     'playlists' => [
                         'url' => 'playlister/playlists',
-                        'label' => 'Playlist',
+                        'label' => Craft::t('craft-playlister','Playlist'),
                     ],
                     'videos' => [
                         'url' => 'playlister/videos',
-                        'label' => 'Video',
+                        'label' => Craft::t('craft-playlister','Video'),
                     ],
                     'settings' => [
                         'url' => 'playlister/settings',
-                        'label' => 'Settings',
+                        'label' => Craft::t('app','Settings'),
                     ],
                 ],
             ];

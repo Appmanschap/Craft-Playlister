@@ -20,7 +20,7 @@ class Playlists extends BaseRelationField
 {
     public static function displayName(): string
     {
-        return Craft::t('craftplaylister', 'Playlists ({pluginName})', ['pluginName' => Playlister::$plugin?->name]);
+        return Craft::t('craft-playlister', 'Playlists ({pluginName})', ['pluginName' => Playlister::$plugin?->name]);
     }
 
     public static function icon(): string
@@ -44,7 +44,7 @@ class Playlists extends BaseRelationField
      */
     public static function defaultSelectionLabel(): string
     {
-        return Craft::t('craftplaylister', 'Add a playlist');
+        return Craft::t('craft-playlister', 'Add a playlist');
     }
 
     /**

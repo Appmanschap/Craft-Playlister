@@ -66,22 +66,22 @@ class Playlist extends Element
 
     public static function displayName(): string
     {
-        return Craft::t('craftplaylister', 'Playlist');
+        return Craft::t('craft-playlister', 'Playlist');
     }
 
     public static function lowerDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'playlist');
+        return Craft::t('craft-playlister', 'playlist');
     }
 
     public static function pluralDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'Playlists');
+        return Craft::t('craft-playlister', 'Playlists');
     }
 
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('craftplaylister', 'playlists');
+        return Craft::t('craft-playlister', 'playlists');
     }
 
     public static function refHandle(): ?string
@@ -137,7 +137,7 @@ class Playlist extends Element
         return [
             [
                 'key' => '*',
-                'label' => Craft::t('craftplaylister', 'All playlists'),
+                'label' => Craft::t('craft-playlister', 'All playlists'),
             ],
         ];
     }
@@ -194,7 +194,7 @@ class Playlist extends Element
     {
         return [
             'id' => ['label' => Craft::t('app', 'ID')],
-            'playlistId' => ['label' => Craft::t('craftplaylister', 'YouTube Playlist ID')],
+            'playlistId' => ['label' => Craft::t('craft-playlister', 'YouTube Playlist ID')],
             'dateUpdated' => ['label' => Craft::t('app', 'Date Updated')],
             // ...
         ];

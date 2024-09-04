@@ -20,7 +20,7 @@ class Videos extends BaseRelationField
 {
     public static function displayName(): string
     {
-        return Craft::t('craftplaylister', 'Video ({pluginName})', ['pluginName' => Playlister::$plugin?->name]);
+        return Craft::t('craft-playlister', 'Video ({pluginName})', ['pluginName' => Playlister::$plugin?->name]);
     }
 
     public static function icon(): string
@@ -44,7 +44,7 @@ class Videos extends BaseRelationField
      */
     public static function defaultSelectionLabel(): string
     {
-        return Craft::t('craftplaylister', 'Add a video');
+        return Craft::t('craft-playlister', 'Add a video');
     }
 
     /**

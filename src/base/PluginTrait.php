@@ -33,7 +33,7 @@ trait PluginTrait
      */
     public function _registerI18nTranslations(): void
     {
-        Craft::$app->i18n->translations['craftplaylister'] = [
+        Craft::$app->i18n->translations['craft-playlister'] = [
             'class' => PhpMessageSource::class,
             'sourceLanguage' => 'en',
             'basePath' => $this->getBasePath() . DIRECTORY_SEPARATOR . 'translations/',
@@ -71,24 +71,24 @@ trait PluginTrait
     {
         Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
             $event->permissions[] = [
-                'heading' => Craft::t('craftplaylister', 'Playlister'),
+                'heading' => Craft::t('craft-playlister', 'Playlister'),
                 'permissions' => [
                     'playlister:playlist' => [
-                        'label' => Craft::t('craftplaylister', 'View playlists'),
+                        'label' => Craft::t('craft-playlister', 'View playlists'),
                         'nested' => [
                             'playlister:playlist:create' => [
-                                'label' => Craft::t('craftplaylister', 'Create playlists'),
+                                'label' => Craft::t('craft-playlister', 'Create playlists'),
                             ],
                             'playlister:playlist:update' => [
-                                'label' => Craft::t('craftplaylister', 'Manage playlists'),
+                                'label' => Craft::t('craft-playlister', 'Manage playlists'),
                             ],
                             'playlister:playlist:delete' => [
-                                'label' => Craft::t('craftplaylister', 'Delete playlists'),
+                                'label' => Craft::t('craft-playlister', 'Delete playlists'),
                             ],
                         ],
                     ],
                     'playlister:plugin-settings' => [
-                        'label' => Craft::t('craftplaylister', 'Edit Plugin Settings'),
+                        'label' => Craft::t('craft-playlister', 'Edit Plugin Settings'),
                     ],
                 ],
             ];
