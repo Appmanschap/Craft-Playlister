@@ -3,13 +3,9 @@
 namespace appmanschap\craftplaylister\controllers;
 
 use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
-use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\controllers\ElementsController;
-use craft\db\Query;
-use craft\db\Table;
-use craft\queue\Queue;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
@@ -75,44 +71,18 @@ class PlaylistController extends ElementsController
 
         $this->requirePermission('playlister:playlist:update');
 
-        $playlistId = Cast::mixedToInt($this->request->getParam('id'));
+        $playlistId = Cast::mixedToInt($this->request->getParam('playlistId'));
+        /** @var ?PlaylistElement $playlist */
         $playlist = Craft::$app->getElements()->getElementById($playlistId, PlaylistElement::class);
 
         if (is_null($playlist)) {
             throw new HttpException(404);
         }
 
-        $this->releaseJobs($playlist);
-
-        Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
+        $playlist->refreshJobs();
 
         $this->setSuccessFlash(Craft::t('craft-playlister', 'Job scheduled.'));
 
         return $this->redirectToPostedUrl($playlist);
-    }
-
-    /**
-     * @param PlaylistElement $playlist
-     * @return void
-     */
-    private function releaseJobs(PlaylistElement $playlist): void
-    {
-        $playlistId = $playlist->playlistId;
-        $playlistIdLength = strlen($playlistId);
-        $uniqueJobPayload = 's:10:"playlistId";s:' . $playlistIdLength . ':"' . $playlistId . '";';
-
-        (new Query())->from(Table::QUEUE)
-            ->where(['like', 'job', ImportPlaylistJob::class])
-            ->andWhere(['like', 'job', $uniqueJobPayload])
-            ->collect()
-            ->each(function($job) {
-                if (!is_array($job) || !isset($job['id'])) {
-                    return;
-                }
-
-                /** @var Queue $queue */
-                $queue = Craft::$app->getQueue();
-                $queue->release($job['id']);
-            });
     }
 }

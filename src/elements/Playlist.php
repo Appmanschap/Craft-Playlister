@@ -4,14 +4,17 @@ namespace appmanschap\craftplaylister\elements;
 
 use appmanschap\craftplaylister\elements\conditions\PlaylistCondition;
 use appmanschap\craftplaylister\elements\db\PlaylistQuery;
+use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use appmanschap\craftplaylister\records\PlaylistRecord;
 use appmanschap\craftplaylister\supports\Cast;
+use appmanschap\craftplaylister\traits\HasJobs;
 use Craft;
 use craft\base\Element;
 use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\ElementCollection;
 use craft\elements\User;
+use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\models\FieldLayout;
 use craft\web\CpScreenResponseBehavior;
@@ -29,6 +32,8 @@ use yii\web\Response;
  */
 class Playlist extends Element
 {
+    use HasJobs;
+
     /**
      * @var string
      */
@@ -58,7 +63,7 @@ class Playlist extends Element
      * @var ElementCollection<array-key, Video>|null
      */
     private ?ElementCollection $_videos = null;
-    
+
     public function __toString(): string
     {
         return $this->name;
@@ -129,7 +134,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $context
+     * @param string $context
      * @return array<int, array<string, string>>
      */
     protected static function defineSources(string $context): array
@@ -143,7 +148,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $source
+     * @param string $source
      * @return array<int, string>
      */
     protected static function defineActions(string $source): array
@@ -154,6 +159,30 @@ class Playlist extends Element
         ];
     }
 
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     * @throws \yii\base\Exception
+     */
+    public function getAdditionalButtons(): string
+    {
+        if (!$this->enabled || (!$this->refreshInterval == 0 && $this->hasRunningJob(ImportPlaylistJob::class))) {
+            return '';
+        }
+
+        return Html::button(Craft::t('craft-playlister', 'Start job'), [
+            'class' => ['btn', 'formsubmit'],
+            'data' => [
+                'action' => 'craft-playlister/playlist/start-job',
+                'redirect' => Craft::$app->getSecurity()->hashData('{cpEditUrl}'),
+                'params' => ['playlistId' => (string)$this->id],
+            ],
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
     protected static function includeSetStatusAction(): bool
     {
         return true;
@@ -201,7 +230,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $source
+     * @param string $source
      * @return array<int, string>
      */
     protected static function defineDefaultTableAttributes(string $source): array
@@ -223,7 +252,8 @@ class Playlist extends Element
             [['youtubeUrl', 'refreshInterval'], 'required', 'when' => fn() => !$this->getIsDraft()],
             ['youtubeUrl', 'url', 'defaultScheme' => 'https'],
             [['youtubeUrl', 'name'], 'string'],
-            ['refreshInterval', 'in', 'range' => [5, 10, 15]],
+            ['refreshInterval', 'in', 'range' => [0, 15, 60, 240, 480]],
+            ['limit', 'in', 'range' => [50, 100, 150, 9999]],
         ]);
     }
 
@@ -345,7 +375,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  bool  $isNew
+     * @param bool $isNew
      * @return void
      * @throws \yii\base\Exception
      * @throws Exception
@@ -361,6 +391,7 @@ class Playlist extends Element
             }
 
             $record->fillByElement($this)->save(false);
+            $this->refreshJobs();
         }
 
         parent::afterSave($isNew);
@@ -408,5 +439,26 @@ class Playlist extends Element
         }
 
         return $this->_videos;
+    }
+
+    /**
+     * @return void
+     */
+    public function refreshJobs(): void
+    {
+        $this->releaseJobs(ImportPlaylistJob::class);
+
+        if ($this->enabled && $this->id) {
+            $playlist = Craft::$app->getElements()->getElementById($this->id, self::class);
+            Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => $playlist]));
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getUniqueJobPayload(): string
+    {
+        return sprintf('s:10:"playlistId";s:%s:"%s";', strlen($this->playlistId), $this->playlistId);
     }
 }

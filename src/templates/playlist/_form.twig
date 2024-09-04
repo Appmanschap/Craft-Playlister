@@ -72,17 +72,25 @@
       errors: playlist.getErrors('refreshInterval'),
       options: [
         {
-          label: 'Every 5 minutes',
-          value: 5
-        },
-        {
-          label: 'Every 10 minutes',
-          value: 10
+          label: 'Never',
+          value: 0
         },
         {
           label: 'Every 15 minutes',
           value: 15
-        }
+        },
+        {
+          label: 'Every 1 hour',
+          value: 60
+        },
+        {
+          label: 'Every 4 hour',
+          value: 240
+        },
+        {
+          label: 'Every 8 hour',
+          value: 480
+        },
       ]
     }) }}
 

@@ -28,7 +28,6 @@ trait Routes
                 $event->rules['playlister/playlists'] = 'craft-playlister/playlist/index';
                 $event->rules['playlister/playlists/new'] = 'craft-playlister/playlist/edit';
                 $event->rules['playlister/playlists/<elementId:\\d+>'] = 'craft-playlister/playlist/edit';
-                $event->rules['playlister/playlists/start-job/<playlistId:\\d+>'] = 'craft-playlister/playlist/start-job';
 
                 $event->rules['playlister/settings'] = 'craft-playlister/settings/plugin';
 
