@@ -34,8 +34,10 @@ class ImportPlaylistJob extends BaseJob
                 __METHOD__
             );
         } finally {
-            // Queue up a new job
-            Craft::$app->getQueue()->delay($this->playlist->refreshInterval * 60)->push(new ImportPlaylistJob(['playlist' => $this->playlist]));
+            if ($this->playlist->refreshInterval > 0) {
+                // Queue up a new job
+                Craft::$app->getQueue()->delay($this->playlist->refreshInterval * 60)->push(new ImportPlaylistJob(['playlist' => $this->playlist]));
+            }
         }
     }
 

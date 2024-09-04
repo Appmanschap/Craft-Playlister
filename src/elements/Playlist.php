@@ -7,6 +7,7 @@ use appmanschap\craftplaylister\elements\db\PlaylistQuery;
 use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use appmanschap\craftplaylister\records\PlaylistRecord;
 use appmanschap\craftplaylister\supports\Cast;
+use appmanschap\craftplaylister\traits\HasJobs;
 use Craft;
 use craft\base\Element;
 use craft\db\Query;
@@ -33,6 +34,8 @@ use yii\web\Response;
  */
 class Playlist extends Element
 {
+    use HasJobs;
+
     /**
      * @var string
      */
@@ -62,7 +65,7 @@ class Playlist extends Element
      * @var ElementCollection<array-key, Video>|null
      */
     private ?ElementCollection $_videos = null;
-    
+
     public function __toString(): string
     {
         return $this->name;
@@ -133,7 +136,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $context
+     * @param string $context
      * @return array<int, array<string, string>>
      */
     protected static function defineSources(string $context): array
@@ -147,7 +150,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $source
+     * @param string $source
      * @return array<int, string>
      */
     protected static function defineActions(string $source): array
@@ -160,18 +163,18 @@ class Playlist extends Element
 
     public function getAdditionalButtons(): string
     {
-        if ($this->hasJob()) {
+        if (!$this->enabled || (!$this->refreshInterval == 0 && $this->hasRunningJob($this->getUniqueJobPayload()))) {
             return '';
         }
 
-        return Html::beginForm() .
-        Html::actionInput('craft-playlister/playlist/start-job') .
-        Html::redirectInput('{cpEditUrl}') .
-        Html::hiddenInput('playlistId', (string) $this->id) .
-        Html::button(Craft::t('craft-playlister', 'Start job'), [
+        return Html::button(Craft::t('craft-playlister', 'Start job'), [
             'class' => ['btn', 'formsubmit'],
-        ]) .
-        Html::endForm();
+            'data' => [
+                'action' => 'craft-playlister/playlist/start-job',
+                'redirect' => Craft::$app->getSecurity()->hashData('{cpEditUrl}'),
+                'params' => ['playlistId' => (string)$this->id],
+            ],
+        ]);
     }
 
     protected static function includeSetStatusAction(): bool
@@ -221,7 +224,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  string  $source
+     * @param string $source
      * @return array<int, string>
      */
     protected static function defineDefaultTableAttributes(string $source): array
@@ -243,7 +246,8 @@ class Playlist extends Element
             [['youtubeUrl', 'refreshInterval'], 'required', 'when' => fn() => !$this->getIsDraft()],
             ['youtubeUrl', 'url', 'defaultScheme' => 'https'],
             [['youtubeUrl', 'name'], 'string'],
-            ['refreshInterval', 'in', 'range' => [5, 10, 15]],
+            ['refreshInterval', 'in', 'range' => [0, 15, 60, 240, 480]],
+            ['limit', 'in', 'range' => [50, 100, 150, 9999]],
         ]);
     }
 
@@ -365,7 +369,7 @@ class Playlist extends Element
     }
 
     /**
-     * @param  bool  $isNew
+     * @param bool $isNew
      * @return void
      * @throws \yii\base\Exception
      * @throws Exception
@@ -381,6 +385,7 @@ class Playlist extends Element
             }
 
             $record->fillByElement($this)->save(false);
+            $this->refreshJobs();
         }
 
         parent::afterSave($isNew);
@@ -400,7 +405,7 @@ class Playlist extends Element
             $record->delete();
         }
 
-        $this->getVideos()?->each(function(Video $video) {
+        $this->getVideos()?->each(function (Video $video) {
             Craft::$app->elements->deleteElement($video, $this->hardDelete);
         });
 
@@ -430,15 +435,23 @@ class Playlist extends Element
         return $this->_videos;
     }
 
-    public function hasJob(): bool
+    /**
+     * @return void
+     */
+    public function refreshJobs(): void
     {
-        $playlistId = $this->playlistId;
-        $playlistIdLength = strlen($playlistId);
-        $uniqueJobPayload = 's:10:"playlistId";s:' . $playlistIdLength . ':"' . $playlistId . '";';
+        $this->releaseJobs(ImportPlaylistJob::class);
 
-        return (new Query())->from(Table::QUEUE)
-            ->where(['like', 'job', ImportPlaylistJob::class])
-            ->andWhere(['like', 'job', $uniqueJobPayload])
-            ->count() > 0;
+        if ($this->enabled) {
+            Craft::$app->getQueue()->push(new ImportPlaylistJob(['playlist' => Craft::$app->getElements()->getElementById($this->id, self::class)]));
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getUniqueJobPayload(): string
+    {
+        return sprintf('s:10:"playlistId";s:%s:"%s";', strlen($this->playlistId), $this->playlistId);
     }
 }
