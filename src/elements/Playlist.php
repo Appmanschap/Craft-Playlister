@@ -159,6 +159,11 @@ class Playlist extends Element
         ];
     }
 
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     * @throws \yii\base\Exception
+     */
     public function getAdditionalButtons(): string
     {
         if (!$this->enabled || (!$this->refreshInterval == 0 && $this->hasRunningJob(ImportPlaylistJob::class))) {
@@ -175,6 +180,9 @@ class Playlist extends Element
         ]);
     }
 
+    /**
+     * @return bool
+     */
     protected static function includeSetStatusAction(): bool
     {
         return true;
