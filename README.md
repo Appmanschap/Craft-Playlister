@@ -4,7 +4,7 @@
 Playlister is a CraftCMS plugin for importing YouTube playlists into Craft. Retrieve the playlists and the corresponding videos.
 
 ## Requirements
-This plugin requires CraftCMS 5.0.0-beta.2 or later.
+This plugin requires CraftCMS 5.0.0 or later.
 
 ## Installation
 To install the plugin, either install it from the plugin store, or follow these instructions:

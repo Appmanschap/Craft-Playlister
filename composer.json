@@ -11,9 +11,15 @@
         "docs": "https://github.com/github.com:appmanschap/craft-playlister.git",
         "rss": "https://github.com/github.com:appmanschap/craft-playlister.git/releases.atom"
     },
+    "authors": [
+        {
+            "name": "appmanschap",
+            "homepage": "https://www.appmanschap.nl/"
+        }
+    ],
     "require": {
         "php": ">=8.2",
-        "craftcms/cms": "^5.2.0",
+        "craftcms/cms": "^5.0.0",
         "google/apiclient": "^2.15.0"
     },
     "require-dev": {
