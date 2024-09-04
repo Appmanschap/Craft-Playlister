@@ -4,16 +4,21 @@ namespace appmanschap\craftplaylister\elements;
 
 use appmanschap\craftplaylister\elements\conditions\PlaylistCondition;
 use appmanschap\craftplaylister\elements\db\PlaylistQuery;
+use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
 use appmanschap\craftplaylister\records\PlaylistRecord;
 use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\base\Element;
+use craft\db\Query;
+use craft\db\Table;
 use craft\elements\actions\Restore;
 use craft\elements\conditions\ElementConditionInterface;
 use craft\elements\ElementCollection;
 use craft\elements\User;
+use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\models\FieldLayout;
+use craft\queue\Queue;
 use craft\web\CpScreenResponseBehavior;
 use Throwable;
 use yii\base\InvalidConfigException;
@@ -152,6 +157,22 @@ class Playlist extends Element
         return [
             Restore::class,
         ];
+    }
+
+    public function getAdditionalButtons(): string
+    {
+        if ($this->hasJob()) {
+            return '';
+        }
+
+        return Html::beginForm() .
+        Html::actionInput('craft-playlister/playlist/start-job') .
+        Html::redirectInput('{cpEditUrl}') .
+        Html::hiddenInput('playlistId', $this->id) .
+        Html::button(Craft::t('craft-playlister', 'Start job'), [
+            'class' => ['btn', 'formsubmit'],
+        ]) .
+        Html::endForm();
     }
 
     protected static function includeSetStatusAction(): bool
@@ -408,5 +429,17 @@ class Playlist extends Element
         }
 
         return $this->_videos;
+    }
+
+    public function hasJob(): bool
+    {
+        $playlistId = $this->playlistId;
+        $playlistIdLength = strlen($playlistId);
+        $uniqueJobPayload = 's:10:"playlistId";s:' . $playlistIdLength . ':"' . $playlistId . '";';
+
+        return (new Query())->from(Table::QUEUE)
+            ->where(['like', 'job', ImportPlaylistJob::class])
+            ->andWhere(['like', 'job', $uniqueJobPayload])
+            ->count() > 0;
     }
 }

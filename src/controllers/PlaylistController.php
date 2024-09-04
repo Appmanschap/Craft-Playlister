@@ -75,7 +75,7 @@ class PlaylistController extends ElementsController
 
         $this->requirePermission('playlister:playlist:update');
 
-        $playlistId = Cast::mixedToInt($this->request->getParam('id'));
+        $playlistId = Cast::mixedToInt($this->request->getParam('playlistId'));
         $playlist = Craft::$app->getElements()->getElementById($playlistId, PlaylistElement::class);
 
         if (is_null($playlist)) {
