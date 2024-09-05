@@ -52,7 +52,7 @@ class Playlist extends Element
     /**
      * @var int
      */
-    public int $refreshInterval = 5;
+    public int $refreshInterval = 0;
 
     /**
      * @var int
