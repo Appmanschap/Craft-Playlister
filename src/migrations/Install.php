@@ -22,7 +22,7 @@ class Install extends Migration
 
     public function safeDown(): bool
     {
-        Playlist::find()->collect()->each(function (Playlist $playlist) {
+        Playlist::find()->collect()->each(function(Playlist $playlist) {
             $playlist->releaseJobs(ImportPlaylistJob::class);
             Craft::$app->getElements()->deleteElement($playlist, true);
         });
