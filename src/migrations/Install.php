@@ -2,6 +2,9 @@
 
 namespace appmanschap\craftplaylister\migrations;
 
+use appmanschap\craftplaylister\elements\Playlist;
+use appmanschap\craftplaylister\jobs\ImportPlaylistJob;
+use Craft;
 use craft\db\Migration;
 
 /**
@@ -19,6 +22,11 @@ class Install extends Migration
 
     public function safeDown(): bool
     {
+        Playlist::find()->collect()->each(function (Playlist $playlist) {
+            $playlist->releaseJobs(ImportPlaylistJob::class);
+            Craft::$app->getElements()->deleteElement($playlist, true);
+        });
+
         $this->dropTableIfExists('{{%playlister_playlists}}');
         $this->dropTableIfExists('{{%playlister_videos}}');
 
