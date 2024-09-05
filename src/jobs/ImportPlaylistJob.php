@@ -33,6 +33,7 @@ class ImportPlaylistJob extends BaseJob
                 ),
                 __METHOD__
             );
+            throw $exception;
         } finally {
             if ($this->playlist->refreshInterval > 0) {
                 // Queue up a new job

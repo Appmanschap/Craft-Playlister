@@ -73,7 +73,7 @@ trait Routes
             $event->navItems[] = [
                 'url' => 'playlister',
                 'label' => 'Playlists',
-                'icon' => $this->getBasePath() . DIRECTORY_SEPARATOR . 'icon.svg',
+                'icon' => $this->getBasePath() . DIRECTORY_SEPARATOR . '/icon-mask.svg',
                 'subnav' => $subNavItems,
             ];
         });
