@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 - 2024-09-11
+
+- Fix queue job won't fail when no videos exist in the playlist
+
 ## 1.0.2 - 2024-09-09
 
 - Updated plugin icon and icon mask

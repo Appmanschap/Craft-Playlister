@@ -128,13 +128,19 @@ class PlaylistImport extends Component
      */
     private function getVideosByPlaylistItems(array $playlistItems): array
     {
+        $videoIds = array_map(static fn($playlistItem) => $playlistItem->getContentDetails()->getVideoId(), $playlistItems);
+
+        if (empty($videoIds)) {
+            return [];
+        }
+
         $videoListResponse = $this->client->getYouTubeService()->videos->listVideos([
             'contentDetails',
             'localizations',
             'snippet',
             'status',
         ], [
-            'id' => array_map(static fn($playlistItem) => $playlistItem->getContentDetails()->getVideoId(), $playlistItems),
+            'id' => $videoIds,
         ]);
 
         return $videoListResponse->getItems();
