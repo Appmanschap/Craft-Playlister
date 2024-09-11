@@ -1,7 +1,7 @@
 {
     "name": "appmanschap/craft-playlister",
     "description": "Import Playlists directly into CraftCMS",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "type": "craft-plugin",
     "license": "proprietary",
     "support": {
