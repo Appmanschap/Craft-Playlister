@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.4 - 2024-09-11
+## 1.0.4 - 2024-09-24
 
 - Added privacyStatus field to the Video element
 - Only queue new job when the job is not failed
