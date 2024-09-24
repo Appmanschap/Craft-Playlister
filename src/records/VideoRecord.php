@@ -28,6 +28,7 @@ use yii\db\ActiveQueryInterface;
  * @property string|null $defaultLanguage
  * @property string $thumbnail
  * @property bool $embeddable
+ * @property string $privacyStatus
  * @property string $tags
  * @property string|null $uid
  */
@@ -80,6 +81,7 @@ class VideoRecord extends ActiveRecord
         $this->defaultAudioLanguage = $videoElement->defaultAudioLanguage;
         $this->defaultLanguage = $videoElement->defaultLanguage;
         $this->embeddable = $videoElement->embeddable;
+        $this->privacyStatus = $videoElement->privacyStatus;
         $this->thumbnail = $videoElement->thumbnail->value;
         $this->tags = $videoElement->tags;
         $this->uid = $videoElement->uid ?? '';

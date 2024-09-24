@@ -192,6 +192,7 @@ class PlaylistImport extends Component
             $video->defaultAudioLanguage = $youtubeVideoSnippet->getDefaultAudioLanguage();
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
+            $video->privacyStatus = $youtubeStatus->getPrivacyStatus();
             $video->thumbnail = VideoThumbnailSize::tryFrom(array_slice($thumbnails, -1)[0] ?? '') ?? VideoThumbnailSize::DEFAULT;
             $video->tags = implode(', ', $tags);
 
