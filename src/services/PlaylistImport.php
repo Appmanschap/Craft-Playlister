@@ -3,7 +3,6 @@
 namespace appmanschap\craftplaylister\services;
 
 use appmanschap\craftplaylister\elements\Playlist as PlaylistElement;
-use appmanschap\craftplaylister\elements\Video;
 use appmanschap\craftplaylister\elements\Video as VideoElement;
 use appmanschap\craftplaylister\enums\VideoThumbnailSize;
 use appmanschap\craftplaylister\services\clients\PlaylistClient;
@@ -226,7 +225,7 @@ class PlaylistImport extends Component
     private function deleteVideoElements(): void
     {
         try {
-            array_map(static fn($videoId) => Craft::$app->getElements()->deleteElementById($videoId, Video::class), $this->missingVideoIds);
+            array_map(static fn($videoId) => Craft::$app->getElements()->deleteElementById($videoId, VideoElement::class), $this->missingVideoIds);
         } catch (Throwable $e) {
             Craft::error(
                 sprintf('Couldn\'t delete video element because of the following exception: %s', $e->getMessage()),
