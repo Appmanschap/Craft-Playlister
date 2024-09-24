@@ -35,6 +35,7 @@ class Video extends Element
     public ?string $defaultAudioLanguage = 'en';
     public ?string $defaultLanguage = 'en';
     public bool $embeddable = false;
+    public string $privacyStatus = 'public';
     public VideoThumbnailSize $thumbnail = VideoThumbnailSize::DEFAULT;
     public string $tags = '';
 
