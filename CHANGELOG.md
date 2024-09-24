@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 - 2024-09-11
+
+- Added privacyStatus field to the Video element
+- Only queue new job when the job is not failed
+- Delete video's that are not retrieved anymore
+
 ## 1.0.3 - 2024-09-11
 
 - Fix queue job won't fail when no videos exist in the playlist
