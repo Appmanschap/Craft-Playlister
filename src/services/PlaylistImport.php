@@ -242,9 +242,11 @@ class PlaylistImport extends Component
     {
         if ($this->firstImport) {
             /** @var array<int, int> $missingVideoIds */
-            $missingVideoIds = VideoElement::find()->where([
-                'playlistId' => $this->playlistId,
-            ])->collect()->pluck('id')->toArray();
+            $missingVideoIds = VideoElement::find()
+                ->status(null)
+                ->where([
+                    'playlistId' => $this->playlistId,
+                ])->collect()->pluck('id')->toArray();
             $this->missingVideoIds = $missingVideoIds;
         }
     }
