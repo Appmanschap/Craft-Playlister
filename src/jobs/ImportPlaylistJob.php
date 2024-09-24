@@ -24,6 +24,11 @@ class ImportPlaylistJob extends BaseJob
     {
         try {
             Playlister::getInstance()->playlistImport->import($this->playlist);
+
+            if ($this->playlist->refreshInterval > 0) {
+                // Queue up a new job
+                Craft::$app->getQueue()->delay($this->playlist->refreshInterval * 60)->push(new ImportPlaylistJob(['playlist' => $this->playlist]));
+            }
         } catch (\Throwable $exception) {
             Craft::error(
                 sprintf(
@@ -34,11 +39,6 @@ class ImportPlaylistJob extends BaseJob
                 __METHOD__
             );
             throw $exception;
-        } finally {
-            if ($this->playlist->refreshInterval > 0) {
-                // Queue up a new job
-                Craft::$app->getQueue()->delay($this->playlist->refreshInterval * 60)->push(new ImportPlaylistJob(['playlist' => $this->playlist]));
-            }
         }
     }
 
