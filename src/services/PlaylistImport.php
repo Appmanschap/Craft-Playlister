@@ -14,6 +14,7 @@ use Google\Service\YouTube\PlaylistItem as YouTubePlaylistItem;
 use Google\Service\YouTube\Video as YoutubeVideo;
 use Throwable;
 use yii\base\Component;
+use yii\base\InvalidConfigException;
 
 /**
  * @link      https://www.appmanschap.nl
@@ -59,14 +60,22 @@ class PlaylistImport extends Component
     private int $limit = 50;
 
     /**
-     * @param  PlaylistElement  $playlist
+     * @var array<int, int>
+     */
+    private array $missingVideoIds = [];
+
+    /**
+     * @param PlaylistElement $playlist
      * @return void
      * @throws Exception
+     * @throws InvalidConfigException
      */
     public function import(PlaylistElement $playlist): void
     {
         $this->playlistId = $playlist->playlistId;
         $this->limit = $playlist->limit ?? 50;
+
+        $this->setMissingVideoIds();
 
         $this->setClient();
 
@@ -79,6 +88,10 @@ class PlaylistImport extends Component
 
         while ($this->canImport()) {
             $this->import($playlist);
+        }
+
+        if ($this->canImport() === false) {
+            $this->deleteVideoElements();
         }
     }
 
@@ -122,7 +135,7 @@ class PlaylistImport extends Component
     }
 
     /**
-     * @param  array<int, YouTubePlaylistItem>  $playlistItems
+     * @param array<int, YouTubePlaylistItem> $playlistItems
      * @return array<int, YoutubeVideo>
      * @throws Exception
      */
@@ -147,9 +160,9 @@ class PlaylistImport extends Component
     }
 
     /**
-     * @param  PlaylistElement  $playlist
-     * @param  array<int, YouTubePlaylistItem>  $playlistItems
-     * @param  array<int, YoutubeVideo>  $videos
+     * @param PlaylistElement $playlist
+     * @param array<int, YouTubePlaylistItem> $playlistItems
+     * @param array<int, YoutubeVideo> $videos
      * @return void
      */
     private function createVideoElements(PlaylistElement $playlist, array $playlistItems, array $videos)
@@ -175,6 +188,8 @@ class PlaylistImport extends Component
 
             if (null === $video) {
                 $video = new VideoElement();
+            } else {
+                $this->unsetFromMissingVideoIds($video->id ?? 0);
             }
 
             $encodedThumnails = json_encode($youtubeVideoSnippet->getThumbnails()->toSimpleObject()) ?: '';
@@ -204,6 +219,44 @@ class PlaylistImport extends Component
                     __METHOD__
                 );
             }
+        }
+    }
+
+    private function deleteVideoElements(): void
+    {
+        try {
+            array_map(static fn($videoId) => Craft::$app->getElements()->deleteElementById($videoId, VideoElement::class), $this->missingVideoIds);
+        } catch (Throwable $e) {
+            Craft::error(
+                sprintf('Couldn\'t delete video element because of the following exception: %s', $e->getMessage()),
+                __METHOD__
+            );
+        }
+    }
+
+    /**
+     * @return void
+     * @throws InvalidConfigException
+     */
+    private function setMissingVideoIds(): void
+    {
+        if ($this->firstImport) {
+            /** @var array<int, int> $missingVideoIds */
+            $missingVideoIds = VideoElement::find()->where([
+                'playlistId' => $this->playlistId,
+            ])->collect()->pluck('id')->toArray();
+            $this->missingVideoIds = $missingVideoIds;
+        }
+    }
+
+    /**
+     * @param int $videoId
+     * @return void
+     */
+    private function unsetFromMissingVideoIds(int $videoId): void
+    {
+        if ($key = array_search($videoId, $this->missingVideoIds, true)) {
+            unset($this->missingVideoIds[$key]);
         }
     }
 }
