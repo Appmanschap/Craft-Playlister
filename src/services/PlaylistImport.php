@@ -257,7 +257,8 @@ class PlaylistImport extends Component
      */
     private function unsetFromMissingVideoIds(int $videoId): void
     {
-        if ($key = array_search($videoId, $this->missingVideoIds, true)) {
+        $key = array_search($videoId, $this->missingVideoIds, true);
+        if ($key !== false) {
             unset($this->missingVideoIds[$key]);
         }
     }
