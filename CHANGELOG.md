@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 - 2024-09-26
+- Fix first video always being removed
+- Fix disabled video's not being removed
+
 ## 1.0.4 - 2024-09-24
 
 - Added privacyStatus field to the Video element
