@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 - 2024-10-04
+- Fix falsy check for thumbnail sizes
+- Added `default` as default for thumbnails
+
 ## 1.0.5 - 2024-09-26
 - Fix first video always being removed
 - Fix disabled video's not being removed
