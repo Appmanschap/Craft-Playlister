@@ -23,10 +23,10 @@ enum VideoThumbnailSize: string
     public function firstAvailableSize(string $size): string
     {
         $thumbnailSizes = array_column(VideoThumbnailSize::cases(), 'value');
-        $requestedSizeKey = array_search($size, $thumbnailSizes);
-        $possibleSizeKey = array_search($this->value, $thumbnailSizes);
+        $requestedSizeKey = array_search($size, $thumbnailSizes, true);
+        $possibleSizeKey = array_search($this->value, $thumbnailSizes, true);
 
-        if (!$requestedSizeKey || !$possibleSizeKey) {
+        if ($requestedSizeKey === false || $possibleSizeKey === false) {
             return $this->value;
         }
 
