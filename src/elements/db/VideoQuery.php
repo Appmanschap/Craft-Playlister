@@ -53,7 +53,7 @@ class VideoQuery extends ElementQuery
         }
 
         if ($this->tags) {
-            array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%playlister_videos}}.playlistId', $tag, 'like') ?? []), $this->tags);
+            array_map(fn($tag) => $this->subQuery?->andWhere(Db::parseParam('{{%playlister_videos}}.tags', $tag, 'like') ?? []), $this->tags);
         }
 
         return parent::beforePrepare();

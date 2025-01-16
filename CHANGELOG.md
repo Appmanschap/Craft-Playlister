@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.7 - 2025-01-16
+- Fix searching for tags in the video query
+
 ## 1.0.6 - 2024-10-04
 - Fix falsy check for thumbnail sizes
 - Added `default` as default for thumbnails
