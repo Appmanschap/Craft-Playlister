@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.8 - 2025-01-30
+- Allow array of playlistIds in the playlist and video query
+
 ## 1.0.7 - 2025-01-16
 - Fix searching for tags in the video query
 

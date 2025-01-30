@@ -20,9 +20,9 @@ use yii\db\Connection as YiiConnection;
 class PlaylistQuery extends ElementQuery
 {
     /**
-     * @var string|null
+     * @var string| string [] | null
      */
-    public ?string $playlistId = null;
+    public string|array|null $playlistId = null;
 
     /**
      * @return bool
