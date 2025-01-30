@@ -18,9 +18,9 @@ use craft\helpers\Db;
 class VideoQuery extends ElementQuery
 {
     /**
-     * @var string|null
+     * @var string|array<string-key, string>|null
      */
-    public ?string $playlistId = null;
+    public string|array|null $playlistId = null;
 
     /**
      * @var bool|null

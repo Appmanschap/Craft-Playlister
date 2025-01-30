@@ -110,6 +110,8 @@
       <path value="$PROJECT_DIR$/vendor/craftcms/phpstan" />
       <path value="$PROJECT_DIR$/vendor/craftcms/ecs" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
