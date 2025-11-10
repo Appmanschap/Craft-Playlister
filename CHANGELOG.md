@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.9 - 2025-02-02
+## 1.0.9 - 2025-11-10
 - Fix video not being unique in the playlist
 
 ## 1.0.8 - 2025-01-30
