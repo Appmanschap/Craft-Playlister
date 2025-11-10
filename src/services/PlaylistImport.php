@@ -68,7 +68,7 @@ class PlaylistImport extends Component
      * @param PlaylistElement $playlist
      * @return void
      * @throws Exception
-     * @throws InvalidConfigException
+     * @throws InvalidConfigException|\JsonException
      */
     public function import(PlaylistElement $playlist): void
     {
@@ -95,6 +95,9 @@ class PlaylistImport extends Component
         }
     }
 
+    /**
+     * @return bool
+     */
     private function canImport(): bool
     {
         return $this->firstImport
@@ -141,7 +144,8 @@ class PlaylistImport extends Component
      */
     private function getVideosByPlaylistItems(array $playlistItems): array
     {
-        $videoIds = array_map(static fn($playlistItem) => $playlistItem->getContentDetails()->getVideoId(), $playlistItems);
+        $videoIds = array_map(static fn($playlistItem) => $playlistItem->getContentDetails()->getVideoId(),
+            $playlistItems);
 
         if (empty($videoIds)) {
             return [];
@@ -164,15 +168,18 @@ class PlaylistImport extends Component
      * @param array<int, YouTubePlaylistItem> $playlistItems
      * @param array<int, YoutubeVideo> $videos
      * @return void
+     * @throws InvalidConfigException|\JsonException
      */
-    private function createVideoElements(PlaylistElement $playlist, array $playlistItems, array $videos)
+    private function createVideoElements(PlaylistElement $playlist, array $playlistItems, array $videos): void
     {
         foreach ($playlistItems as $playlistItem) {
             /** @var YouTubePlaylistItem $playlistItem */
             $videoId = $playlistItem->getContentDetails()->getVideoId();
 
             /** @var YoutubeVideo[] $youtubeVideos */
-            $youtubeVideos = array_values(array_filter($videos, static fn(YoutubeVideo $video) => $video->id === $videoId));
+            $youtubeVideos = array_values(
+                array_filter($videos, static fn(YoutubeVideo $video) => $video->id === $videoId)
+            );
 
             if (empty($youtubeVideos)) {
                 continue;
@@ -184,6 +191,7 @@ class PlaylistImport extends Component
             /** @var VideoElement|null $video */
             $video = VideoElement::find()->where([
                 'videoId' => $videoId,
+                'playlistId' => $this->playlistId,
             ])->one();
 
             if (null === $video) {
@@ -192,8 +200,11 @@ class PlaylistImport extends Component
                 $this->unsetFromMissingVideoIds($video->id ?? 0);
             }
 
-            $encodedThumnails = json_encode($youtubeVideoSnippet->getThumbnails()->toSimpleObject()) ?: '';
-            $thumbnails = json_decode($encodedThumnails, true) ?? [];
+            $encodedThumbnails = json_encode(
+                $youtubeVideoSnippet->getThumbnails()->toSimpleObject(),
+                JSON_THROW_ON_ERROR
+            ) ?: '';
+            $thumbnails = json_decode($encodedThumbnails, true, 512, JSON_THROW_ON_ERROR) ?? [];
             $thumbnails = array_keys(is_array($thumbnails) ? $thumbnails : []);
             $tags = empty($youtubeVideoSnippet->getTags()) ? [] : $youtubeVideoSnippet->getTags();
 
@@ -208,7 +219,9 @@ class PlaylistImport extends Component
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
             $video->privacyStatus = $youtubeStatus->getPrivacyStatus();
-            $video->thumbnail = VideoThumbnailSize::tryFrom(array_slice($thumbnails, -1)[0] ?? '') ?? VideoThumbnailSize::DEFAULT;
+            $video->thumbnail = VideoThumbnailSize::tryFrom(
+                array_slice($thumbnails, -1)[0] ?? ''
+            ) ?? VideoThumbnailSize::DEFAULT;
             $video->tags = implode(', ', $tags);
 
             try {
@@ -222,10 +235,16 @@ class PlaylistImport extends Component
         }
     }
 
+    /**
+     * @return void
+     */
     private function deleteVideoElements(): void
     {
         try {
-            array_map(static fn($videoId) => Craft::$app->getElements()->deleteElementById($videoId, VideoElement::class), $this->missingVideoIds);
+            array_map(
+                static fn($videoId) => Craft::$app->getElements()->deleteElementById($videoId, VideoElement::class),
+                $this->missingVideoIds
+            );
         } catch (Throwable $e) {
             Craft::error(
                 sprintf('Couldn\'t delete video element because of the following exception: %s', $e->getMessage()),
