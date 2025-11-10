@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.9 - 2025-02-02
+- Fix video not being unique in the playlist
+
 ## 1.0.8 - 2025-01-30
 - Allow array of playlistIds in the playlist and video query
 
