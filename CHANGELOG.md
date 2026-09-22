@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.10 - 2025-11-12
+- Fix video thumbnail sizes not being retrieved correctly
+
 ## 1.0.9 - 2025-11-10
 - Fix video not being unique in the playlist
 
