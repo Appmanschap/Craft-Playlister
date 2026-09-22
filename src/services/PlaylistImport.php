@@ -219,9 +219,7 @@ class PlaylistImport extends Component
             $video->defaultLanguage = $youtubeVideoSnippet->getDefaultLanguage();
             $video->embeddable = $youtubeStatus->getEmbeddable();
             $video->privacyStatus = $youtubeStatus->getPrivacyStatus();
-            $video->thumbnail = VideoThumbnailSize::tryFrom(
-                array_slice($thumbnails, -1)[0] ?? ''
-            ) ?? VideoThumbnailSize::DEFAULT;
+            $video->thumbnail = $this->highestAvailableThumbnailSize($thumbnails);
             $video->tags = implode(', ', $tags);
 
             try {
@@ -233,6 +231,26 @@ class PlaylistImport extends Component
                 );
             }
         }
+    }
+
+    /**
+     * YouTube also returns sizes above maxres (fhd, qhd, uhd) that we don't
+     * support, so pick the largest size we know instead of the last key.
+     *
+     * @param array<int, string> $availableSizes
+     * @return VideoThumbnailSize
+     */
+    private function highestAvailableThumbnailSize(array $availableSizes): VideoThumbnailSize
+    {
+        $highest = VideoThumbnailSize::DEFAULT;
+
+        foreach (VideoThumbnailSize::cases() as $size) {
+            if (in_array($size->value, $availableSizes, true)) {
+                $highest = $size;
+            }
+        }
+
+        return $highest;
     }
 
     /**
