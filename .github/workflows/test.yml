@@ -6,25 +6,20 @@ permissions:
 
 jobs:
   code-tests:
-    runs-on: [ubuntu-latest]
+    runs-on: [ self-hosted, Linux ]
     timeout-minutes: 90
+    container: ghcr.io/appmanschap/build-php-node:latest
 
     steps:
-      - name: Setup PHP with composer v2
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          tools: composer:v2
-
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         continue-on-error: true # continue if the cache restore/upload fails
         with:
           path: vendor
