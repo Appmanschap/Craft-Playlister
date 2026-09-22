@@ -2,6 +2,7 @@
 
 namespace appmanschap\craftplaylister\traits;
 
+use appmanschap\craftplaylister\supports\Cast;
 use Craft;
 use craft\db\Query;
 use craft\db\Table;
@@ -63,7 +64,7 @@ trait HasJobs
 
                 /** @var Queue $queue */
                 $queue = Craft::$app->getQueue();
-                $queue->release($job['id']);
+                $queue->release(Cast::mixedToString($job['id']));
             });
     }
 }

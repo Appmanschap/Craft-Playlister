@@ -329,8 +329,9 @@ class Video extends Element
 
     public function prepareEditScreen(Response $response, string $containerId): void
     {
-        /** @var CpScreenResponseBehavior $response */
-        $response->crumbs([
+        /** @var CpScreenResponseBehavior|null $behavior */
+        $behavior = $response->getBehavior(CpScreenResponseBehavior::NAME);
+        $behavior?->crumbs([
             [
                 'label' => self::pluralDisplayName(),
                 'url' => UrlHelper::cpUrl('videos'),

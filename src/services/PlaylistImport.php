@@ -73,7 +73,7 @@ class PlaylistImport extends Component
     public function import(PlaylistElement $playlist): void
     {
         $this->playlistId = $playlist->playlistId;
-        $this->limit = $playlist->limit ?? 50;
+        $this->limit = $playlist->limit;
 
         $this->setMissingVideoIds();
 
@@ -90,9 +90,7 @@ class PlaylistImport extends Component
             $this->import($playlist);
         }
 
-        if ($this->canImport() === false) {
-            $this->deleteVideoElements();
-        }
+        $this->deleteVideoElements();
     }
 
     /**
@@ -101,7 +99,7 @@ class PlaylistImport extends Component
     private function canImport(): bool
     {
         return $this->firstImport
-            || ($this->firstImport === false && $this->nextPageToken && $this->retrievedAmount < $this->limit);
+            || ($this->nextPageToken && $this->retrievedAmount < $this->limit);
     }
 
     /**
