@@ -251,10 +251,35 @@ class Playlist extends Element
             ['id', 'integer'],
             [['youtubeUrl', 'refreshInterval'], 'required', 'when' => fn() => !$this->getIsDraft()],
             ['youtubeUrl', 'url', 'defaultScheme' => 'https'],
+            ['youtubeUrl', 'validatePlaylistUrl', 'when' => fn() => !$this->getIsDraft()],
             [['youtubeUrl', 'name'], 'string'],
             ['refreshInterval', 'in', 'range' => [0, 15, 60, 240, 480]],
             ['limit', 'in', 'range' => [50, 100, 150, 9999]],
         ]);
+    }
+
+    /**
+     * @param string $attribute
+     * @return void
+     */
+    public function validatePlaylistUrl(string $attribute): void
+    {
+        if ($this->playlistIdFromUrl() === null) {
+            $this->addError($attribute, Craft::t('craft-playlister', 'The URL doesn\'t contain a YouTube playlist (a "list=" parameter).'));
+        }
+    }
+
+    /**
+     * @return string|null The value of the "list" query parameter of the YouTube URL
+     */
+    public function playlistIdFromUrl(): ?string
+    {
+        $url_parts = parse_url(Cast::mixedToString($this->youtubeUrl));
+        parse_str(is_array($url_parts) ? ($url_parts['query'] ?? '') : '', $query_parts);
+
+        $list = $query_parts['list'] ?? null;
+
+        return is_string($list) && $list !== '' ? $list : null;
     }
 
     public function getUriFormat(): ?string
@@ -361,14 +386,14 @@ class Playlist extends Element
     public function beforeSave(bool $isNew): bool
     {
         if (!$this->getIsDraft()) {
-            $url_parts = parse_url(Cast::mixedToString($this->youtubeUrl));
-            parse_str($url_parts['query'] ?? '', $query_parts);
+            $playlistId = $this->playlistIdFromUrl();
 
-            if (!isset($query_parts['list']) || !is_string($query_parts['list'])) {
+            // Normally caught by validatePlaylistUrl(), unless the element is saved without validation
+            if ($playlistId === null) {
                 throw new Exception('Playlist could not be found from the url.');
             }
 
-            $this->playlistId = $query_parts['list'];
+            $this->playlistId = $playlistId;
         }
 
 
@@ -447,6 +472,12 @@ class Playlist extends Element
      */
     public function refreshJobs(): void
     {
+        // Drafts (also autosaved ones) share the playlist ID of their canonical playlist, releasing jobs here would
+        // cancel the canonical import. The canonical playlist refreshes its jobs when the draft is applied.
+        if ($this->getIsDraft() || $this->getIsRevision()) {
+            return;
+        }
+
         $this->releaseJobs(ImportPlaylistJob::class);
 
         if ($this->enabled && $this->id) {

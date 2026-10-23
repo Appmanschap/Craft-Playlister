@@ -22,6 +22,15 @@ class ImportPlaylistJob extends BaseJob
 
     public function execute($queue): void
     {
+        // Jobs queued for drafts before this check existed have no (or a half-edited) playlist ID, don't run or re-queue them
+        if ($this->playlist->getIsDraft() || $this->playlist->getIsRevision() || $this->playlist->playlistId === '') {
+            Craft::warning(
+                sprintf('Skipping import for playlist "%s", it is a draft/revision or has no playlist ID.', $this->playlist->name),
+                __METHOD__
+            );
+            return;
+        }
+
         try {
             Playlister::getInstance()->playlistImport->import($this->playlist);
 
