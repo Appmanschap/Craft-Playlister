@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.11 - 2026-10-23
+- Fix saving a draft (including autosaves) queueing an import job for the draft and cancelling the playlist's own import job
+- Skip queued import jobs for drafts or playlists without a playlist ID instead of failing with a YouTube API error
+- Show a validation error when the YouTube URL doesn't contain a playlist, instead of throwing an exception
+
 ## 1.0.10 - 2025-11-12
 - Fix video thumbnail sizes not being retrieved correctly
 

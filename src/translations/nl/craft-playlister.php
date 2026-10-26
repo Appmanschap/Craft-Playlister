@@ -31,6 +31,7 @@ return [
 
     'The playlist URL to import' => 'De URL van de playlist om te importeren',
     'The name of the playlist' => 'De naam van de playlist',
+    'The URL doesn\'t contain a YouTube playlist (a "list=" parameter).' => 'De URL bevat geen YouTube playlist (een "list=" parameter).',
 
     // Video's
     'All videos' => 'Alle video\'s',

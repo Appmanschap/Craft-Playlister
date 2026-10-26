@@ -79,7 +79,10 @@ class PlaylistController extends ElementsController
             throw new HttpException(404);
         }
 
-        $playlist->refreshJobs();
+        // The button is also shown while editing a draft, the job belongs to the canonical playlist
+        /** @var PlaylistElement $canonical */
+        $canonical = $playlist->getCanonical();
+        $canonical->refreshJobs();
 
         $this->setSuccessFlash(Craft::t('craft-playlister', 'Job scheduled.'));
 
